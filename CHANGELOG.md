@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog.
 
+## [0.1.1] - 2026-03-16
+
+### Added
+
+- Local manual installer script for the plugin:
+  - `scripts/install-plugin-local.sh`
+
+### Changed
+
+- Updated getting-started docs (EN/PT) to use the installer script instead of manual copy commands.
+- Refined command UX for all plugin commands by rewriting each command's first title and opening explanation for clearer discoverability and faster understanding in the command picker.
+  - `/brainstorm` -> Step 1 framing
+  - `/plan` -> Step 2 framing
+  - `/work-plan` -> Step 3 framing
+  - `/review` -> Step 4 framing
+  - `/commit-changes` -> Step 5 framing
+  - `/work`, `/doc`, `/compound`, `/deploy-lambda` -> concise purpose-first titles and first-line guidance
+
 ## [0.1.0] - 2026-03-16
 
 ### Added

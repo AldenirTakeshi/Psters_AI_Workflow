@@ -6,9 +6,9 @@ description: >
 argument-hint: "[path to plan file] [optional: Phase N]"
 ---
 
-# Execute Plan Phase
+# Step 3 — Execute One Planned Phase
 
-Execute a phase from `docs/plans/` directly. Read docs first, execute, build, update docs. No micro-plans.
+Use this command to execute one phase from `docs/plans/` with full discipline: read docs first, implement, build, and update docs.
 
 ## Documentation Intent (Read This First)
 

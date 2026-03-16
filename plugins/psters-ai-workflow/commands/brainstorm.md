@@ -7,11 +7,11 @@ description: >
 argument-hint: "[feature idea or problem to explore]"
 ---
 
-# Brainstorm — Decision Mode
+# Step 1 — Explore and Decide Feature Scope
 
 **Note: The current year is 2026.**
 
-The brainstorm is the **decision base for `/plan`**. It must resolve ambiguity: what are we building, what's the architecture, what infrastructure is needed, and what are the open questions. This is NOT a research dump — it's a focused decision document that a senior engineer reads and knows exactly what direction to take.
+Use this command to transform an idea into concrete decisions (scope, architecture, constraints, and open questions) that become the direct input for `/plan`.
 
 ---
 

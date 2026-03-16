@@ -6,9 +6,9 @@ description: >
 argument-hint: "[description of what to do, e.g. fix X, improve Y, add Z]"
 ---
 
-# Execute Work
+# Execute Unplanned Work (Fast Path)
 
-> For plan-driven work (executing a phase from `docs/plans/`), use `/work-plan` instead.
+Use this command for small fixes, minor adjustments, and focused tasks outside formal plans. For phase execution from `docs/plans/`, use `/work-plan`.
 
 ## Documentation Intent (Read This First)
 

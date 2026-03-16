@@ -7,9 +7,9 @@ description: >
 argument-hint: "[optional: brief context about the fix or 'pattern' for pattern mode]"
 ---
 
-# /compound
+# Capture Reusable Learnings and Patterns
 
-Document knowledge so the team and **learnings-researcher** can find it later. Only ONE file is written — the final doc. Subagents return text; the orchestrator assembles and writes.
+Use this command to explicitly register problem/solution learnings or reusable implementation patterns so future work can reuse them quickly.
 
 ## Modes
 

@@ -5,11 +5,13 @@ description: >
 argument-hint: "lambda <repo> | lambdas | module <module> | feature <feature> | architecture | update | adr <decision>"
 ---
 
-# /doc
+# Force Technical Documentation by Scope
 
 **Note: The current year is 2026.**
 
-Generate, update, and maintain canonical documentation for system components. The living documentation lives in:
+Use this command when you want explicit technical documentation output for a specific scope (module, feature, architecture, ADR, or global update). `/work` and `/work-plan` already update docs automatically.
+
+The living documentation lives in:
 - `docs/lambdas/` — Lambda and processor repos
 - `docs/modules/` — NestJS backend modules (or equivalent)
 - `docs/features/` — Angular frontend features (or equivalent)

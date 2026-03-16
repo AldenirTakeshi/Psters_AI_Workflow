@@ -5,9 +5,9 @@ description: >
 argument-hint: "[lambda-name or 'all']"
 ---
 
-# Deploy Lambda
+# Deploy Lambda with Guaranteed Scripts
 
-Lambdas are deployed **only** via the project's deploy scripts, using **AWS CLI**. No CDK deploy, no IAC apply.
+Use this command to deploy Lambda changes safely through project-approved deploy scripts (AWS CLI flow only, no CDK/IaC deploy path).
 
 ## Rule: Use the guaranteed deploy scripts
 

@@ -4,9 +4,9 @@ description: Multi-agent code review. Runs contextual review agents based on wha
 argument-hint: "[PR number, branch name, or path]"
 ---
 
-# Review
+# Step 4 — Review and Validate Changes
 
-Perform multi-agent code review using project-local agents.
+Use this command to run a structured multi-agent review after implementation, then fix findings and re-run until the change is ready.
 
 ## Target
 

@@ -5,9 +5,10 @@ description: >
 argument-hint: "[paste issue(s) with TICKET-XXX and metadata, or list TICKET-XXX]"
 ---
 
-# Commit Changes — Parallel Multi-Repo, Multi-Commit
+# Step 5 — Create Structured Commits
 
-Commit all **uncommitted** changes across every git repo in the workspace.
+Use this command to produce high-quality, ticket-aware commits after review, including multi-repo parallel commit organization when needed.
+
 Each repo gets its own subagent that:
 1. Inspects every changed file individually
 2. Groups files by which ticket they relate to

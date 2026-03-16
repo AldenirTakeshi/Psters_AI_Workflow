@@ -6,11 +6,11 @@ description: >
 argument-hint: "[feature description, bug report, or path to brainstorm doc]"
 ---
 
-# Create Plan
+# Step 2 — Build an Execution Plan
 
 **Note: The current year is 2026.**
 
-Transform a feature description (or brainstorm) into an execution-ready plan in `docs/plans/`. Each phase must have enough detail that `/work-plan` can execute it directly — no intermediate micro-planning step needed.
+Use this command to convert the feature context (or brainstorm) into a phased, execution-ready plan in `docs/plans/` that `/work-plan` can run directly.
 
 ---
 
