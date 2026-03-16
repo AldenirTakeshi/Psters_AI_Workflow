@@ -1,6 +1,6 @@
 # psters-ai-workflow
 
-An anti-vibe-coding plugin that structures AI-assisted development with plans, phases, review, and continuous documentation.
+An anti-vibe-coding, agentic AI workflow plugin for any project, language, and framework, with structured planning, phased execution, review, and continuous documentation.
 
 ![psters-ai-workflow logo](assets/logo.svg)
 
