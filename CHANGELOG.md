@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog.
 
+## [0.1.2] - 2026-03-16
+
+### Added
+
+- Maintainer release automation script:
+  - `scripts/release-plugin.sh`
+- Repository-level maintainer workflow helpers:
+  - `.cursor/commands/develop-plugin.md`
+  - `.cursor/commands/release-plugin.md`
+  - `.cursor/rules/plugin-maintainer-flow.mdc`
+- Claude-focused maintainer helpers:
+  - `.claude/README.md`
+  - `.claude/commands/develop-plugin.md`
+  - `.claude/commands/release-plugin.md`
+  - `.claude/agents/plugin-submission-reviewer.md`
+  - `.claude/agents/plugin-release-manager.md`
+- README section documenting the maintainer release flow.
+
 ## [0.1.1] - 2026-03-16
 
 ### Added

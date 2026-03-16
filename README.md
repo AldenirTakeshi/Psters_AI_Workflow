@@ -24,6 +24,16 @@ This repository is structured to sync `docs/` into the GitHub Wiki automatically
 
 Whenever `docs/` changes on `main`, the workflow syncs pages to the Wiki again.
 
+## Maintainer Release Flow
+
+For this plugin repository, use the maintainer flow:
+
+1. Implement changes.
+2. Run `/review-plugin-submission`.
+3. Update `CHANGELOG.md` and `.cursor-plugin/marketplace.json` version (when releasing).
+4. Validate with `node scripts/validate-template.mjs`.
+5. Release with `./scripts/release-plugin.sh <version>`.
+
 ## Documentation Navigation
 
 - Docs index (start here): [docs/README.md](docs/README.md)
