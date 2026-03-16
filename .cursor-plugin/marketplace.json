@@ -1,24 +1,19 @@
 {
-  "name": "cursor-plugin-starters",
+  "name": "psters-ai-workflow-marketplace",
   "owner": {
-    "name": "Your Org",
-    "email": "plugins@example.com"
+    "name": "Psters",
+    "email": "plugins@psters.dev"
   },
   "metadata": {
-    "description": "Starter marketplace template for Cursor plugins",
+    "description": "Marketplace manifest for the AI Workflow plugin",
     "version": "0.1.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
     {
-      "name": "starter-simple",
-      "source": "./plugins/starter-simple",
-      "description": "Minimal plugin with rules and skills only"
-    },
-    {
-      "name": "starter-advanced",
-      "source": "./plugins/starter-advanced",
-      "description": "Full-featured plugin with rules, skills, agents, commands, hooks, and MCP"
+      "name": "psters-ai-workflow",
+      "source": "psters-ai-workflow",
+      "description": "Daily AI workflow for planning, execution, review, and commit discipline"
     }
   ]
 }
