@@ -1,11 +1,11 @@
 <h1>
-  Psters AI Workflow
+  Pster's AI Workflow
   <img src="plugins/psters-ai-workflow/assets/logo.svg" alt="Psters AI Workflow logo" width="56" align="right" />
 </h1>
 
 An anti-vibe-coding, agentic AI workflow that improves results with engineering rigor in any project, language, and framework.
 
-## Psters AI Workflow Explained (START HERE)
+## Pster's AI Workflow Explained (START HERE)
 
 - English: [jump to English section](#psters-ai-workflow-explained-english)
 - Portuguese (PT-BR): [jump to Portuguese section](#psters-ai-workflow-explicado-portugues-pt-br)
@@ -13,26 +13,6 @@ An anti-vibe-coding, agentic AI workflow that improves results with engineering 
 ## Community
 
 - Discord: [Pster's AI Workflow Discord](https://discord.gg/vxyrWuqUhe)
-
-## GitHub Wiki Sync
-
-This repository is structured to sync `docs/` into the GitHub Wiki automatically.
-
-1. In GitHub, open `Settings` -> `Features` and enable `Wikis`.
-2. Go to `Actions` and run workflow: **Sync Docs to Wiki**.
-3. Open the Wiki tab to see `Home`, sidebar navigation, and all docs pages.
-
-Whenever `docs/` changes on `main`, the workflow syncs pages to the Wiki again.
-
-## Maintainer Release Flow
-
-For this plugin repository, use the maintainer flow:
-
-1. Implement changes.
-2. Run `/review-plugin-submission`.
-3. Update `CHANGELOG.md` and `.cursor-plugin/marketplace.json` version (when releasing).
-4. Validate with `node scripts/validate-template.mjs`.
-5. Release with `./scripts/release-plugin.sh <version>`.
 
 ## Documentation Navigation
 

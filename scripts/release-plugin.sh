@@ -48,7 +48,7 @@ if [[ "${MARKETPLACE_VERSION}" != "${VERSION}" ]]; then
 fi
 
 echo "Checking changelog section..."
-if ! rg -n "^## \\[${VERSION}\\]" "${CHANGELOG_MD}" >/dev/null; then
+if ! node -e "const fs=require('fs');const txt=fs.readFileSync('${CHANGELOG_MD}','utf8');const re=new RegExp('^## \\\\[${VERSION}\\\\]','m');process.exit(re.test(txt)?0:1)"; then
   echo "CHANGELOG.md does not contain section ## [${VERSION}]." >&2
   echo "Update CHANGELOG.md before release." >&2
   exit 1
