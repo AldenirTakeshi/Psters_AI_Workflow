@@ -172,6 +172,8 @@ The install script is idempotent: re-running it always produces a clean, up-to-d
 
 After install, confirm the plugin appears in Cursor Plugins and commands are available.
 
+**Windows + WSL:** If you install from a WSL terminal, use Cursor **connected to WSL** (Remote-WSL) so it reads Linux `~/.cursor`. See [docs/english/cursor-wsl-windows.md](docs/english/cursor-wsl-windows.md).
+
 ### Core philosophy
 
 Do not run one giant prompt and hope for the best.
@@ -376,6 +378,8 @@ Quando publicado, instale via [Cursor Marketplace](https://cursor.com/marketplac
 O script de instalacao e idempotente: rode quantas vezes quiser — ele sempre produz uma instalacao limpa e atualizada. Para atualizar, faca `git pull` e rode o script novamente.
 
 Depois da instalacao, confirme que o plugin aparece na lista de Plugins do Cursor e que os comandos estao disponiveis.
+
+**Windows + WSL:** Se voce instalar pelo terminal WSL, use o Cursor **conectado ao WSL** (Remote-WSL) para ele ler o `~/.cursor` do Linux. Veja [docs/portuguese/cursor-wsl-windows.md](docs/portuguese/cursor-wsl-windows.md).
 
 ### Filosofia central
 

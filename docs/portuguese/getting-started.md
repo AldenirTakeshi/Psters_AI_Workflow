@@ -7,6 +7,8 @@ Este guia ajuda voce a executar o workflow de ponta a ponta pela primeira vez.
 1. `./scripts/install-plugin-local.sh`
 2. Reinicie o Cursor (ou recarregue a janela).
 
+**Windows + WSL:** Se voce rodou o script no WSL mas o plugin nao aparece no Cursor Windows, veja [Cursor no Windows + WSL](cursor-wsl-windows.md).
+
 ## 2) Comece com uma task real
 
 Use uma feature/fix pequena, mas real, do backlog.

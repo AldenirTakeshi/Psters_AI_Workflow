@@ -19,6 +19,7 @@ Esta pasta contém a versão em português da documentação.
 ## Arquivos
 
 - `getting-started.md`
+- `cursor-wsl-windows.md` — plugin instalado no WSL mas invisivel no Cursor Windows
 - `workflow-methodology.md`
 - `commands-reference.md`
 - `command-recipes.md`

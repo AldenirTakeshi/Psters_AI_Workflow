@@ -13,7 +13,9 @@
 - [English: Faq](English-Faq)
 - [English: Docs Quality Checklist](English-Docs-Quality-Checklist)
 - [English: Extreme Programming](English-Extreme-Programming)
-- [English: Add A Plugin](English-Add-A-Plugin)
+- [English: Cursor Wsl Windows](English-Cursor-Wsl-Windows)
+- [English: Marketing Workflows](English-Marketing-Workflows)
+- [English: Other Editors](English-Other-Editors)
 - [English: Wiki Sync](English-Wiki-Sync)
 
 ### Portuguese
@@ -27,7 +29,9 @@
 - [Portuguese: Faq](Portuguese-Faq)
 - [Portuguese: Docs Quality Checklist](Portuguese-Docs-Quality-Checklist)
 - [Portuguese: Extreme Programming](Portuguese-Extreme-Programming)
-- [Portuguese: Add A Plugin](Portuguese-Add-A-Plugin)
+- [Portuguese: Cursor Wsl Windows](Portuguese-Cursor-Wsl-Windows)
+- [Portuguese: Marketing Workflows](Portuguese-Marketing-Workflows)
+- [Portuguese: Other Editors](Portuguese-Other-Editors)
 - [Portuguese: Wiki Sync](Portuguese-Wiki-Sync)
 
 ### Project

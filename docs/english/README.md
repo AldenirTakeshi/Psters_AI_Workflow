@@ -11,6 +11,7 @@ This folder contains the English version of the documentation.
 ## Files
 
 - `getting-started.md`
+- `cursor-wsl-windows.md` — plugin installed via WSL but not visible in Windows Cursor
 - `workflow-methodology.md`
 - `commands-reference.md`
 - `command-recipes.md`

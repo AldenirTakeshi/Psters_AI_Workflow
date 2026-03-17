@@ -49,10 +49,60 @@ async function ensureCleanDir(path) {
 }
 
 function buildHomePage(groups) {
+  const englishBySource = new Map(groups.English.map((page) => [page.sourceFile, page]));
+  const portugueseBySource = new Map(groups.Portuguese.map((page) => [page.sourceFile, page]));
+  const enGettingStarted = englishBySource.get("getting-started.md");
+  const ptGettingStarted = portugueseBySource.get("getting-started.md");
+  const enCommands = englishBySource.get("commands-reference.md");
+  const ptCommands = portugueseBySource.get("commands-reference.md");
+  const enFaq = englishBySource.get("faq.md");
+  const ptFaq = portugueseBySource.get("faq.md");
+  const enWsl = englishBySource.get("cursor-wsl-windows.md");
+  const ptWsl = portugueseBySource.get("cursor-wsl-windows.md");
+
   const lines = [
     "# Psters AI Workflow Wiki",
     "",
-    "This wiki is synchronized from the repository `docs/` folder.",
+    "Welcome. This wiki is synchronized from the repository `docs/` folder.",
+    "",
+    "## Quick Start",
+    "",
+    "- New here? Start in 10 minutes:",
+    enGettingStarted
+      ? `  - [English: Getting Started](${enGettingStarted.fileName.replace(/\.md$/, "")})`
+      : "  - English: Getting Started",
+    ptGettingStarted
+      ? `  - [Portuguese: Getting Started](${ptGettingStarted.fileName.replace(/\.md$/, "")})`
+      : "  - Portuguese: Getting Started",
+    "- Need command details?",
+    enCommands
+      ? `  - [English: Commands Reference](${enCommands.fileName.replace(/\.md$/, "")})`
+      : "  - English: Commands Reference",
+    ptCommands
+      ? `  - [Portuguese: Commands Reference](${ptCommands.fileName.replace(/\.md$/, "")})`
+      : "  - Portuguese: Commands Reference",
+    "- Have questions?",
+    enFaq
+      ? `  - [English: FAQ](${enFaq.fileName.replace(/\.md$/, "")})`
+      : "  - English: FAQ",
+    ptFaq
+      ? `  - [Portuguese: FAQ](${ptFaq.fileName.replace(/\.md$/, "")})`
+      : "  - Portuguese: FAQ",
+    "",
+    "## Community",
+    "",
+    "- Discord: https://discord.gg/vxyrWuqUhe",
+    "",
+    "## Known Issues",
+    "",
+    "- Plugin installed in WSL may not appear in Windows-local Cursor.",
+    "- Fix: open Cursor in Remote-WSL mode for that project (`Connect to WSL` or `cursor .` from WSL).",
+    enWsl
+      ? `- Full guide (EN): [Cursor on Windows + WSL](${enWsl.fileName.replace(/\.md$/, "")})`
+      : "- Full guide (EN): Cursor on Windows + WSL",
+    ptWsl
+      ? `- Guia completo (PT-BR): [Cursor no Windows + WSL](${ptWsl.fileName.replace(/\.md$/, "")})`
+      : "- Guia completo (PT-BR): Cursor no Windows + WSL",
     "",
     "## English",
   ];
@@ -72,8 +122,6 @@ function buildHomePage(groups) {
     "## Contributing",
     "",
     "- [Contributing Guide](Contributing)",
-    "",
-    "Community Discord: https://discord.gg/vxyrWuqUhe",
     ""
   );
 
@@ -124,7 +172,7 @@ async function main() {
       await writeFile(join(OUT_DIR, pageName), wikiContent, "utf8");
 
       const title = `${lang.label}: ${titleCaseSlug(file).replace(/-/g, " ")}`;
-      groups[lang.label].push({ fileName: pageName, title });
+      groups[lang.label].push({ fileName: pageName, title, sourceFile: file });
     }
   }
 

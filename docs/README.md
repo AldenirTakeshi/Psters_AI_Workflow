@@ -14,6 +14,8 @@
 - Extreme Programming (PT-BR): `portuguese/extreme-programming.md`
 - Getting started (EN): `english/getting-started.md`
 - Getting started (PT-BR): `portuguese/getting-started.md`
+- Cursor + WSL on Windows (EN): `english/cursor-wsl-windows.md`
+- Cursor + WSL no Windows (PT-BR): `portuguese/cursor-wsl-windows.md`
 - Command recipes (EN): `english/command-recipes.md`
 - Command recipes (PT-BR): `portuguese/command-recipes.md`
 - Examples in practice (EN): `english/examples-in-practice.md`
