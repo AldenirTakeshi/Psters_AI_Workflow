@@ -27,6 +27,7 @@ An anti-vibe-coding, agentic AI workflow that improves results with engineering 
 - [Commands reference](docs/english/commands-reference.md)
 - [Command recipes](docs/english/command-recipes.md)
 - [Examples in practice](docs/english/examples-in-practice.md)
+- [Using the workflow outside Cursor](docs/english/other-editors.md)
 - [Hooks reference](docs/english/hooks-reference.md)
 - [FAQ](docs/english/faq.md)
 - [Docs quality checklist](docs/english/docs-quality-checklist.md)
@@ -39,6 +40,7 @@ An anti-vibe-coding, agentic AI workflow that improves results with engineering 
 - [Referencia de comandos](docs/portuguese/commands-reference.md)
 - [Receitas de comandos](docs/portuguese/command-recipes.md)
 - [Exemplos na pratica](docs/portuguese/examples-in-practice.md)
+- [Usando o workflow fora do Cursor](docs/portuguese/other-editors.md)
 - [Referencia de hooks](docs/portuguese/hooks-reference.md)
 - [FAQ](docs/portuguese/faq.md)
 - [Checklist de qualidade de documentacao](docs/portuguese/docs-quality-checklist.md)
@@ -108,15 +110,19 @@ This workflow was built from real daily usage in a production startup environmen
 
 ### Install the plugin
 
+> Using a different editor? See [Using the workflow outside Cursor](docs/english/other-editors.md).
+
 ### Option 1: Cursor Marketplace
 
-When published, install from [Cursor Marketplace](https://cursor.com/marketplace).
+When published, install from [Cursor Marketplace](https://cursor.com/marketplace). Updates are delivered automatically.
 
 ### Option 2: Manual install (available now)
 
 1. Run:
    - `./scripts/install-plugin-local.sh`
 2. Restart Cursor (or reload the window).
+
+The install script is idempotent: re-running it always produces a clean, up-to-date installation. To update, run `git pull` and re-run the script.
 
 After install, confirm the plugin appears in Cursor Plugins and commands are available.
 
@@ -309,15 +315,19 @@ Este workflow nasceu de uso real diario em ambiente de startup com entrega conti
 
 ### Instalar o plugin
 
+> Usando outro editor? Veja [Usando o workflow fora do Cursor](docs/portuguese/other-editors.md).
+
 ### Opcao 1: Cursor Marketplace
 
-Quando publicado, instale via [Cursor Marketplace](https://cursor.com/marketplace).
+Quando publicado, instale via [Cursor Marketplace](https://cursor.com/marketplace). As atualizacoes serao entregues automaticamente.
 
 ### Opcao 2: Instalacao manual (disponivel agora)
 
 1. Rode:
    - `./scripts/install-plugin-local.sh`
 2. Reinicie o Cursor (ou recarregue a janela).
+
+O script de instalacao e idempotente: rode quantas vezes quiser — ele sempre produz uma instalacao limpa e atualizada. Para atualizar, faca `git pull` e rode o script novamente.
 
 Depois da instalacao, confirme que o plugin aparece na lista de Plugins do Cursor e que os comandos estao disponiveis.
 

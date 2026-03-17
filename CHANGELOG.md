@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog.
 
+## [0.1.5] - 2026-03-16
+
+### Added
+
+- New documentation page: "Using the workflow outside Cursor" (EN and PT-BR):
+  - `docs/english/other-editors.md`
+  - `docs/portuguese/other-editors.md`
+  - Covers: why Cursor is recommended (Marketplace auto-updates, hooks, agents), Claude Code setup (slash commands), Windsurf, VS Code + GitHub Copilot, and generic approach for any AI tool.
+  - Includes feature comparison table across tools.
+- Updated `README.md` (EN and PT-BR install sections): added link to other-editors doc, idempotency note for the install script, and Marketplace auto-update note.
+- Updated `docs/english/README.md` and `docs/portuguese/README.md`: added `other-editors.md` to the file index.
+
 ## [0.1.4] - 2026-03-16
 
 ### Fixed
