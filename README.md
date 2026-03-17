@@ -139,12 +139,12 @@ In short: **you define the "how"; AI executes with rigor**.
 
 ```mermaid
 flowchart LR
-  A[Idea] --> B[/brainstorm]
-  B --> C[/plan]
-  C --> D[/work-plan per phase]
-  D --> E[/review]
-  E --> F[/commit-changes]
-  D --> G[/doc and /compound]
+  A[Idea] --> B["/brainstorm"]
+  B --> C["/plan"]
+  C --> D["/work-plan per phase"]
+  D --> E["/review"]
+  E --> F["/commit-changes"]
+  D --> G["/doc and /compound"]
   G --> D
 ```
 
@@ -340,12 +340,12 @@ Em resumo: **voce define o "como"; a IA executa com rigor**.
 
 ```mermaid
 flowchart LR
-  A[Ideia] --> B[/brainstorm]
-  B --> C[/plan]
-  C --> D[/work-plan por fase]
-  D --> E[/review]
-  E --> F[/commit-changes]
-  D --> G[/doc e /compound]
+  A[Ideia] --> B["/brainstorm"]
+  B --> C["/plan"]
+  C --> D["/work-plan por fase"]
+  D --> E["/review"]
+  E --> F["/commit-changes"]
+  D --> G["/doc e /compound"]
   G --> D
 ```
 

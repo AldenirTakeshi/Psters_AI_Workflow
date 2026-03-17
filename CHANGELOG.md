@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog.
 
+## [0.1.4] - 2026-03-16
+
+### Fixed
+
+- Mermaid diagram rendering errors on GitHub caused by `/` at the start of node labels (e.g. `[/brainstorm]` parsed as trapezoid shape). Wrapped all such labels in quotes (`["/brainstorm"]`).
+- Affected files: `README.md`, `docs/english/workflow-methodology.md`, `docs/portuguese/workflow-methodology.md`, `docs/english/extreme-programming.md`, `docs/portuguese/extreme-programming.md`, and all `.wiki-export/` variants.
+
 ## [0.1.3] - 2026-03-16
 
 ### Added

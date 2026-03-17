@@ -57,12 +57,12 @@ Every implementation cycle leaves docs in a better state. This compounds over ti
 
 ```mermaid
 flowchart LR
-  A[Idea] --> B[/brainstorm]
-  B --> C[/plan]
-  C --> D[/work-plan per phase]
-  D --> E[/review]
-  E --> F[/commit-changes]
-  D --> G[/doc and /compound]
+  A[Idea] --> B["/brainstorm"]
+  B --> C["/plan"]
+  C --> D["/work-plan per phase"]
+  D --> E["/review"]
+  E --> F["/commit-changes"]
+  D --> G["/doc and /compound"]
   G --> D
 ```
 

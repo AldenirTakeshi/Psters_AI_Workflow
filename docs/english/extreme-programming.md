@@ -24,11 +24,11 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  A[/brainstorm] --> B[/plan]
-  B --> C[/work-plan per phase]
-  C --> D[/review]
-  D --> E[/commit-changes]
-  C --> F[/doc and /compound]
+  A["/brainstorm"] --> B["/plan"]
+  B --> C["/work-plan per phase"]
+  C --> D["/review"]
+  D --> E["/commit-changes"]
+  C --> F["/doc and /compound"]
   F --> C
 ```
 

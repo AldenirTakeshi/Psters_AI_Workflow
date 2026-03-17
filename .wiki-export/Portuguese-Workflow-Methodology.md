@@ -59,12 +59,12 @@ Cada ciclo de implementacao deixa as docs melhores. Isso acumula ao longo do tem
 
 ```mermaid
 flowchart LR
-  A[Ideia] --> B[/brainstorm]
-  B --> C[/plan]
-  C --> D[/work-plan por fase]
-  D --> E[/review]
-  E --> F[/commit-changes]
-  D --> G[/doc e /compound]
+  A[Ideia] --> B["/brainstorm"]
+  B --> C["/plan"]
+  C --> D["/work-plan por fase"]
+  D --> E["/review"]
+  E --> F["/commit-changes"]
+  D --> G["/doc e /compound"]
   G --> D
 ```
 
