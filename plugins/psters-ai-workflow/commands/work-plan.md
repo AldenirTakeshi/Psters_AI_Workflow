@@ -1,18 +1,20 @@
 ---
-name: work-plan
+name: pwf-work-plan
 description: >
   Execute a plan phase from docs/plans/. Reads existing docs first, executes tasks directly from the plan,
   builds, then updates documentation. No intermediate planning. No tests.
 argument-hint: "[path to plan file] [optional: Phase N]"
+disable-model-invocation: true
 ---
 
 # Step 3 — Execute One Planned Phase
 
 Use this command to execute one phase from `docs/plans/` with full discipline: read docs first, implement, build, and update docs.
+Apply `skills/using-psters-workflow/SKILL.md` at start.
 
 ## Documentation Intent (Read This First)
 
-Docs updated during `/work-plan` must become reliable implementation memory for future phases and future AI runs.
+Docs updated during `/pwf-work-plan` must become reliable implementation memory for future phases and future AI runs.
 
 Do not write generic summaries. Document:
 
@@ -31,7 +33,7 @@ If you skip Step 1 or Step 4, the workflow is BROKEN.
 
 ## Input
 
-<plan_input> #$ARGUMENTS </plan_input>
+<plan_input> #$ARGUMENTS </pwf-plan_input>
 
 If empty or not pointing to a plan file, ask: "Which plan file? (e.g. `docs/plans/20260312-feat-xyz-plan.md`)"
 
@@ -41,17 +43,28 @@ If empty or not pointing to a plan file, ask: "Which plan file? (e.g. `docs/plan
 
 **Your first tool calls MUST be Read calls. Do NOT start implementing.**
 
+Before Step 1 execution details, resolve extension guidance for `before_work_plan`:
+- `node ${CURSOR_PLUGIN_ROOT}/scripts/resolve-workflow-extensions.mjs before_work_plan`
+
 1. **Read the plan file** fully.
+   - Validate task format in target phase:
+     - `- [ ] T### [P?] [USx?] Description with file path`
+   - If format is inconsistent, normalize the phase task list before execution (or ask user to run `/pwf-plan` refinement).
 
 2. **Identify the target phase** — first ⬜ Pending phase, or the one specified by the user. If the argument names a phase number (e.g. "Phase 2"), start at that phase.
 
-3. **Read existing documentation (REQUIRED — use Read tool NOW):**
-   - `docs/solutions/patterns/critical-patterns.md` — ALWAYS read this first if it exists
-   - `docs/modules/<module>.md` — if the phase touches a backend module
-   - `docs/features/<feature>.md` — if the phase touches a frontend feature
-   - `docs/lambdas/<repo>.md` — if the phase touches a Lambda repo
-   - Relevant `docs/solutions/` entries — search by feature keywords for known patterns and gotchas
-   - **If any expected doc file is missing:** create it immediately with a useful baseline. Minimum sections:
+3. **Load docs baseline via skill (REQUIRED):**
+   - Apply `skills/docs-baseline-loading/SKILL.md`.
+   - Read mandatory baseline docs before implementation.
+   - Create missing canonical baseline docs immediately using the skill's required minimum sections.
+   - Then read phase-specific docs:
+     - `docs/solutions/patterns/critical-patterns.md` (if exists)
+     - `docs/modules/<module>.md` (backend scope)
+     - `docs/features/<feature>.md` (frontend scope)
+     - `docs/lambdas/<repo>.md` (Lambda scope)
+     - `docs/runbooks/README.md` (operational/deploy scope)
+     - relevant `docs/solutions/` entries by feature keywords
+   - **If any other expected doc file is missing:** create it immediately with a useful baseline. Minimum sections:
      - `Purpose`
      - `Source of Truth Files`
      - `Current Implementation Snapshot`
@@ -64,7 +77,20 @@ If empty or not pointing to a plan file, ask: "Which plan file? (e.g. `docs/plan
 
 5. **Ticket number:** If not in plan frontmatter, ask once: "Do you have a ticket number (TICKET-XXXX) for commit messages?"
 
-6. **Create TodoWrite** task list directly from the plan phase's numbered tasks (in dependency order).
+6. **Create TodoWrite** task list directly from the plan phase task IDs (T001, T002...) in dependency order.
+   - Preserve `[P]` markers as parallel opportunities.
+   - Preserve `[USx]` labels for traceability in status updates.
+   - If user explicitly requested TDD and plan contains test-first tasks, preserve red-green-refactor order.
+
+### Definition of Ready (BLOCKING)
+
+Before Step 2, confirm all are true:
+
+1. Critical ambiguities resolved (or explicitly marked with `[NEEDS CLARIFICATION]`).
+2. Tasks have IDs + file paths and executable scope.
+3. Acceptance criteria are measurable for this phase.
+4. Main risks/dependencies are explicit.
+5. Required docs/pattern references were loaded.
 
 ---
 
@@ -77,26 +103,23 @@ For each task in the phase:
 - Implement the task.
 - Mark task completed in TodoWrite.
 
+If a task is primarily bug/debug oriented, follow `skills/systematic-debugging/SKILL.md` before attempting larger fixes.
+Playbook mapping:
+- deep stack/source uncertainty -> `skills/systematic-debugging/root-cause-tracing.md`
+- async timing/flaky behavior -> `skills/systematic-debugging/condition-based-waiting.md`
+- regression hardening after fix -> `skills/systematic-debugging/defense-in-depth.md`
+
+If user explicitly requested TDD for this phase, apply `skills/test-driven-development/SKILL.md` for relevant tasks only.
+
 ### ⚠️ CRITICAL: TypeORM Migration Atomic Chain (when applicable)
 
-When a task generates a TypeORM migration, you **MUST** execute this entire chain as a **blocking, unbreakable sequence** before touching any other task. Skipping or deferring causes schema drift that breaks production.
-
-```
-1. GENERATE    → npm run typeorm:generate -- src/database/migrations/MigrationName
-2. DRIFT-CHECK → Run schema-drift-detector agent on the new file. Fix ANY unrelated table/column changes.
-3. RUN LOCALLY → cd backend && npm run typeorm:run  (or npm run dev:migrate for Docker)
-4. VERIFY      → If typeorm:run fails → STOP. Fix the issue. Do NOT continue.
-```
-
-**Why this is critical:** `typeorm:generate` compares entities against the LOCAL database schema. If a previous migration wasn't run, the next generate will see a stale schema and produce a migration containing drift (duplicate changes from the unrun migration). This creates migrations that fail in production with "table already exists" or "type already exists" errors.
-
-**If you need to generate a second migration in the same session**, the first one MUST be run on the local DB first. No exceptions.
-
-**Production deployment:** Remind the user to use project-specific migration scripts that block schema dumps before touching production.
+Follow the migration chain defined in `rules/operational-guardrails.mdc` (generate -> drift-check -> local run).
+Treat this as blocking. Do not continue other tasks until the chain succeeds.
 
 ### Built-in capabilities (use as needed during execution):
 
-- **AWS CLI:** Run `aws sso login --profile <aws-profile>` before any AWS command when applicable. Never use CDK/IAC unless project-specific rules allow.
+- **Operational policy source:** `rules/operational-guardrails.mdc`
+- **Project overrides (optional):** `docs/workflow/operational-overrides.md` (if present, it overrides defaults from guardrails)
 - **Database access:** Load DB vars from `backend/.env` (or project-specific env) for psql queries when applicable. Never display credentials.
 - **Context7:** Use the Context7 MCP (`resolve-library-id` then `query-docs`) before implementing with external libraries.
 
@@ -113,14 +136,9 @@ When a task generates a TypeORM migration, you **MUST** execute this entire chai
 
 **Only run if the phase changed 5+ files or touched multiple repos.** Otherwise skip to Step 4.
 
-If triggered, spawn review agents **in parallel** using the Task tool (`subagent_type: generalPurpose`). For each, tell the subagent to read its agent file and review the implementation. Select agents based on what was changed:
-
-- `frontend/` or Angular touched → `angular-reviewer` (`agents/review/angular-reviewer.md`)
-- `backend/` or NestJS touched → `nestjs-reviewer` (`agents/review/nestjs-reviewer.md`)
-- Lambda repos touched → `lambda-reviewer` (`agents/review/lambda-reviewer.md`)
-- TypeORM migration created → `data-integrity-guardian` + `schema-drift-detector`
-- Auth, secrets touched → `security-sentinel`
-- Always (when review runs) → `code-simplicity-reviewer`
+If triggered, spawn review agents **in parallel** using the Task tool (`subagent_type: generalPurpose`). For each, tell the subagent to read its agent file and review the implementation.
+Use collision-safe agent naming in prompts: `psters-ai-workflow:<category>:<agent-name>`.
+Use the canonical mapping in `assets/review-agent-selection-mapping.md` to select agents by changed scope.
 
 Address **critical** findings before finishing. Informational findings are noted but don't block.
 
@@ -128,64 +146,24 @@ Address **critical** findings before finishing. Informational findings are noted
 
 ## Step 4: Documentation Maintenance (MANDATORY — never skip)
 
-**This step is MANDATORY even for small changes.** Run applicable steps **in parallel** using the Task tool (`subagent_type: generalPurpose`).
+**This step is MANDATORY even for small changes.**
 
-**1. Doc Shepherd — ALWAYS run (no exceptions):**
-Spawn `doc-shepherd` (`agents/docs/doc-shepherd.md`) with:
-- `diff` — git diff of the phase's implementation
-- `changed_files` — list of modified/created/deleted files
-- `work_summary` — phase name + brief description
-
-It fixes stale references in existing docs and reports contradictions.
-
-**2. Backend module doc — if module substantially changed:**
-If new endpoints, entities, or business rules were added to a NestJS module, spawn `backend-module-doc-writer` (`agents/docs/backend-module-doc-writer.md`) to update `docs/modules/<module>.md`.
-If `docs/modules/<module>.md` does not exist, create it first, then populate it.
-
-**3. Frontend feature doc — if feature substantially changed:**
-If new components, routes, or services were added, spawn `frontend-feature-doc-writer` (`agents/docs/frontend-feature-doc-writer.md`) to update `docs/features/<feature>.md`.
-If `docs/features/<feature>.md` does not exist, create it first, then populate it.
-
-**4. Lambda doc — if Lambda repos touched:**
-Spawn `lambda-doc-writer` (`agents/docs/lambda-doc-writer.md`) for each Lambda repo modified. Write to `docs/lambdas/<repo>.md`. Remind user to deploy.
-If `docs/lambdas/<repo>.md` does not exist, create it first, then populate it.
-
-**5. Pattern extraction — if a new reusable pattern was established:**
-Spawn `pattern-extractor` (`agents/docs/pattern-extractor.md`) with the diff and context. If it returns a pattern (not `NO_PATTERN_FOUND`), write to `docs/solutions/patterns/<category>/<filename>.md`.
-If the target patterns folder/file does not exist, create it.
-
-### Documentation Quality Gate (BLOCKING)
-
-Before Step 5, each updated/created doc must pass all checks:
-
-1. **Phase-aware clarity**
-   - Distinguish what this phase completed vs what remains for later phases.
-   - Never mark future phase scope as implemented.
-
-2. **Concrete references**
-   - Cite exact file paths, endpoints, DTO/entity names, and service methods changed in this phase.
-   - Avoid generic statements without code anchors.
-
-3. **Future execution support**
-   - Include invariants, gotchas, and a safe next-change checklist.
-   - Include dependencies between backend/frontend/lambda if relevant.
-
-4. **Plan synchronization quality**
-   - Plan status table and master checklist updated accurately.
-   - If phase only partial, mark exactly what is pending instead of forcing completion.
-
-5. **Consistency with critical patterns**
-   - No contradictions with `docs/solutions/patterns/critical-patterns.md` (if it exists).
-   - Terminology consistent across `docs/modules`, `docs/features`, `docs/lambdas`, and plan.
-
-6. **Signal over noise**
-   - No filler prose; keep actionable context for future implementation/review.
+Apply `skills/docs-maintenance-after-work/SKILL.md` and execute its full flow:
+- always run `doc-shepherd`,
+- run `plan-sync` for plan/work-plan synchronization,
+- run specialized doc writers conditionally,
+- run `pattern-extractor` when applicable,
+- pass the documentation quality gate before Step 5.
 
 ---
 
 ## Step 5: Finish
 
 Summarize: what was implemented, files changed, any deferred items.
+
+### Verification Evidence (MANDATORY before completion claims)
+
+Before claiming phase completion/fix success, apply `skills/verification-before-completion/SKILL.md` and use the evidence format from `rules/operational-guardrails.mdc`.
 
 Include a dedicated **Documentation updates** subsection:
 
@@ -195,22 +173,21 @@ Include a dedicated **Documentation updates** subsection:
 - any explicit doc debt left for next phase
 
 Suggest next steps:
-- **Next phase** → continue with `/work-plan [same plan path] Phase N+1`
+- **Next phase** → continue with `/pwf-work-plan [same plan path] Phase N+1`
 - **Commit** with ticket number
-- **`/review`** for full PR review (if all phases done or before merge)
-- **`/compound`** if a non-trivial bug was fixed during the phase
-- **Lambda deploy** reminder if Lambda repos were touched
+- **`/pwf-review`** for full PR review (if all phases done or before merge)
+- **`/pwf-doc-capture`** if a non-trivial bug was fixed during the phase
+- **`/pwf-aws-lambda-deploy`** reminder if Lambda repos were touched
+- **`/pwf-analyze [same plan path]`** if inconsistencies emerge during execution
+- apply `skills/finishing-a-development-branch/SKILL.md` when phase/branch work is fully complete
+
+Before finalizing, resolve extension guidance for `after_work_plan`:
+- `node ${CURSOR_PLUGIN_ROOT}/scripts/resolve-workflow-extensions.mjs after_work_plan`
 
 ---
 
 ## Conventions
 
-**Patterns:** kebab-case files, PascalCase classes; consistent error capture; TypeORM CLI for migrations when applicable; English text.
-
-**Commits:** `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>` per `rules/commits.mdc`.
-
-**Lambda deploy:** Run from Lambda repo root after SSO login. Use project deploy scripts only.
-
-**No tests:** Do not write or run unit tests or E2E tests unless project rules require it.
-
-**Protected:** Never delete `docs/plans/`, `docs/solutions/`, `docs/lambdas/`, `docs/modules/`, `docs/features/`, `docs/decisions/`, `docs/work-plans/`.
+- Follow canonical policy in `rules/operational-guardrails.mdc`.
+- Follow commit policy in `rules/commits.mdc`.
+- Use optional project overrides in `docs/workflow/operational-overrides.md` when present.

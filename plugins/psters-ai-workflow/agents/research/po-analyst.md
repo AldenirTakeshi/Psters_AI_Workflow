@@ -1,6 +1,6 @@
 ---
 name: po-analyst
-description: "Use during /brainstorm to perform a deep Product Owner analysis of a new feature. Researches who the real users are, what their jobs-to-be-done are, what success looks like, what the feature must NOT do, and produces structured acceptance criteria and risk register. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to perform a deep Product Owner analysis of a new feature. Researches who the real users are, what their jobs-to-be-done are, what success looks like, what the feature must NOT do, and produces structured acceptance criteria and risk register. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 

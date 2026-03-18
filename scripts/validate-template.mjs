@@ -232,6 +232,54 @@ async function validateComponentFrontmatter(pluginDir, pluginName) {
   }
 }
 
+async function validateOptionalWorkflowConfigs(pluginDir, pluginName) {
+  const presetsPath = path.join(pluginDir, "presets", "presets.json");
+  if (await pathExists(presetsPath)) {
+    const presets = await readJsonFile(presetsPath, `${pluginName} workflow presets`);
+    if (presets) {
+      if (typeof presets.defaultPreset !== "string" || presets.defaultPreset.length === 0) {
+        addError(`${pluginName}: presets.defaultPreset must be a non-empty string.`);
+      }
+      if (!presets.presets || typeof presets.presets !== "object") {
+        addError(`${pluginName}: presets.presets must be an object map.`);
+      } else if (presets.defaultPreset && !presets.presets[presets.defaultPreset]) {
+        addError(
+          `${pluginName}: presets.defaultPreset "${presets.defaultPreset}" is missing in presets.presets.`
+        );
+      }
+    }
+  }
+
+  const extensionsPath = path.join(pluginDir, "extensions", "extensions.json");
+  if (await pathExists(extensionsPath)) {
+    const extensions = await readJsonFile(extensionsPath, `${pluginName} extensions catalog`);
+    if (extensions) {
+      if (!Array.isArray(extensions.hookPoints)) {
+        addError(`${pluginName}: extensions.hookPoints must be an array.`);
+      }
+      if (!Array.isArray(extensions.extensions)) {
+        addError(`${pluginName}: extensions.extensions must be an array.`);
+      } else {
+        for (const [index, ext] of extensions.extensions.entries()) {
+          const label = `${pluginName}: extensions.extensions[${index}]`;
+          if (!ext || typeof ext !== "object") {
+            addError(`${label} must be an object.`);
+            continue;
+          }
+          if (typeof ext.id !== "string" || ext.id.length === 0) {
+            addError(`${label}.id must be a non-empty string.`);
+          }
+          if (typeof ext.hookPoint !== "string" || ext.hookPoint.length === 0) {
+            addError(`${label}.hookPoint must be a non-empty string.`);
+          } else if (Array.isArray(extensions.hookPoints) && !extensions.hookPoints.includes(ext.hookPoint)) {
+            addError(`${label}.hookPoint "${ext.hookPoint}" is not listed in hookPoints.`);
+          }
+        }
+      }
+    }
+  }
+}
+
 function resolveMarketplaceSource(source, pluginRoot) {
   if (typeof source !== "string" || source.length === 0) {
     return null;
@@ -343,6 +391,7 @@ async function main() {
     }
 
     await validateComponentFrontmatter(pluginDir, entry.name);
+    await validateOptionalWorkflowConfigs(pluginDir, entry.name);
 
     const hooksPath = path.join(pluginDir, "hooks", "hooks.json");
     if (!(await pathExists(hooksPath))) {

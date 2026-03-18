@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "hookPoints": [
+    "before_plan",
+    "after_plan",
+    "before_work_plan",
+    "after_work_plan",
+    "before_work",
+    "after_work"
+  ],
+  "extensions": [
+    {
+      "id": "default-plan-consistency-check",
+      "enabled": true,
+      "hookPoint": "after_plan",
+      "mode": "advisory",
+      "message": "Run /pwf-analyze on the generated plan before execution."
+    }
+  ]
+}

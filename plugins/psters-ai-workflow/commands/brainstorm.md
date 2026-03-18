@@ -1,17 +1,18 @@
 ---
-name: brainstorm
+name: pwf-brainstorm
 description: >
   Feature exploration and decision-making. Spawns 3 focused agents to research the feature,
-  then resolves open questions through dialogue. Output is a concise decision document — the base for /plan.
+  then resolves open questions through dialogue. Output is a concise decision document — the base for /pwf-plan.
   Saves to docs/brainstorms/.
 argument-hint: "[feature idea or problem to explore]"
+disable-model-invocation: true
 ---
 
 # Step 1 — Explore and Decide Feature Scope
 
 **Note: The current year is 2026.**
 
-Use this command to transform an idea into concrete decisions (scope, architecture, constraints, and open questions) that become the direct input for `/plan`.
+Use this command to transform an idea into concrete decisions (scope, architecture, constraints, and open questions) that become the direct input for `/pwf-plan`.
 
 ---
 
@@ -26,7 +27,7 @@ If empty, ask: "What would you like to explore? Describe the feature, problem, o
 ## Phase 0: Quick Clarity Check
 
 Read the feature description. If requirements are already complete and scope is clear, ask:
-> "Requirements look clear. Proceed to `/plan` directly, or brainstorm first to surface integration impacts and architecture decisions?"
+> "Requirements look clear. Proceed to `/pwf-plan` directly, or brainstorm first to surface integration impacts and architecture decisions?"
 
 If the description is one vague sentence, ask one focused clarifying question before continuing. Otherwise proceed immediately.
 
@@ -44,34 +45,43 @@ Consolidate: what already exists, what's been decided before.
 
 ---
 
-## Phase 2: 3 Parallel Research Agents
+## Phase 2: Research Agent Pack (Parallel)
 
-Spawn all three agents **simultaneously** using the Task tool (`subagent_type: generalPurpose`). Do not wait for one before starting the next. Pass the full feature description + context from Phase 1 to each.
+Spawn the core research agents **simultaneously** using the Task tool (`subagent_type: generalPurpose`). Do not wait for one before starting the next. Pass the full feature description + context from Phase 1 to each.
+Use collision-safe agent naming in prompts: `psters-ai-workflow:<category>:<agent-name>`.
 
 ---
 
-### Agent 1 — Codebase Research (`repo-research-analyst`)
+### Core agent 1 — Codebase Research (`repo-research-analyst`)
 
 > "Read and follow `agents/research/repo-research-analyst.md`. Map all existing code related to: `<feature_description>`. Return: exact file paths, entity names, service method names, API routes, DTOs, components, Lambda repos, and which rules apply."
 
 ---
 
-### Agent 2 — Integration & Impact Analysis (`integration-impact-analyst`)
+### Core agent 2 — Integration & Impact Analysis (`integration-impact-analyst`)
 
 > "Read and follow `agents/research/integration-impact-analyst.md`. Map every integration impact of: `<feature_description>`. For every entity, Lambda, notification type, settings section, and permission check: does this feature touch it, change it, or could break it? Focus on: entity changes and migration needs, Lambda pipeline impact, breaking changes with severity."
 
 ---
 
-### Agent 3 — Architecture & Infrastructure Analysis
+### Core agent 3 — Product framing (`po-analyst`)
 
-> "Analyze the architecture and infrastructure needs for: `<feature_description>`. Determine:
-> 1. Where does the logic live? (backend service, new Lambda, or both — and why)
-> 2. What cloud services are needed? (new or existing: queues, storage, events, secrets, etc.)
-> 3. Data model implications: new entities, new columns, new enums, new relationships
-> 4. Infrastructure changes needed (new Lambda repo, new queue, new bucket, API changes, etc.)
-> 5. Security approach: auth model, encryption needs, permission checks
->
-> Ground everything in the project's current architecture. Check backend, IAC, and relevant Lambda repos for existing patterns."
+> "Read and follow `agents/research/po-analyst.md`. Analyze product goals, users, anti-goals, success metrics, and high-impact acceptance criteria for: `<feature_description>`."
+
+---
+
+### Conditional expansion pack (spawn all applicable in parallel)
+
+- Always for non-trivial features:
+  - `edge-case-hunter` (`agents/research/edge-case-hunter.md`)
+  - `data-model-designer` (`agents/research/data-model-designer.md`)
+  - `api-contract-designer` (`agents/research/api-contract-designer.md`)
+- If user-facing UI/UX is relevant:
+  - `ux-consistency-reviewer` (`agents/research/ux-consistency-reviewer.md`)
+- If async/serverless/evented flow is relevant:
+  - `lambda-pipeline-analyst` (`agents/research/lambda-pipeline-analyst.md`)
+- If security/compliance boundaries are material:
+  - `security-sentinel` (`agents/review/security-sentinel.md`)
 
 ---
 
@@ -88,6 +98,14 @@ Ask them **one at a time**, with **multiple choice answers** when possible. Cont
 **Focus only on questions that change the design.** Do not ask about:
 - Implementation details decided by project rules (TypeORM? if used. Which DB? if applicable.)
 - Patterns already established in `docs/solutions/patterns/critical-patterns.md`
+
+---
+
+## Phase 3.5: Optional Visual Companion (ONLY when useful)
+
+If the feature is strongly visual (complex UI, flow comparison, interaction-heavy), use `skills/visual-brainstorm-companion/SKILL.md` and create one focused visual artifact (browser/canvas) to support decisions.
+
+Skip this phase for backend-only or text-first discussions.
 
 ---
 
@@ -110,7 +128,7 @@ What exists today that this feature builds on or changes:
 - Existing plans/brainstorms already completed for related areas
 
 ### 3. Architecture & Infrastructure
-*(From Agent 3)*
+*(From integration/data-model/lambda/api analysis pack)*
 - **Where the logic lives** — backend service, Lambda, or both (with rationale)
 - **Cloud services** — new or existing (queues, storage, events, etc.)
 - **Data model** — new entities, columns, enums, relationships (overview, not full schema)
@@ -127,13 +145,13 @@ What exists today that this feature builds on or changes:
 ### 5. Key Decisions
 Numbered list of every decision made during the brainstorm. Mark each:
 - `✅ DECIDED:` — resolved during dialogue or evident from context
-- `⚠️ OPEN:` — needs resolution during `/plan` (with brief explanation of options)
+- `⚠️ OPEN:` — needs resolution during `/pwf-plan` (with brief explanation of options)
 
 ### 6. Open Questions
-Numbered list of unresolved questions that `/plan` will need to resolve. If none: "All questions resolved during brainstorm."
+Numbered list of unresolved questions that `/pwf-plan` will need to resolve. If none: "All questions resolved during brainstorm."
 
 ### 7. Next Steps
-- Run `/plan` to generate the implementation plan
+- Run `/pwf-plan` to generate the implementation plan
 - Specific areas that need deeper investigation during planning
 - Any prerequisites (cloud service setup, third-party accounts, etc.)
 
@@ -145,15 +163,18 @@ Present the user with:
 
 1. **Top 3 decisions made** — the most important choices captured.
 2. **Top risks or open items** — anything unresolved.
-3. **Recommendation:** Run `/plan <path-to-this-brainstorm>` to create the implementation plan.
+3. **Recommendation:** Run `/pwf-plan <path-to-this-brainstorm>` to create the implementation plan.
 
 ---
 
 ## Conventions
 
-- **TypeORM migrations:** Never manual — always `npm run typeorm:generate` when applicable.
-- **AWS CLI:** `aws sso login --profile <aws-profile>` before any AWS command when applicable. Never `cdk deploy` unless project-specific.
-- **Lambda deploy:** `scripts/deploy-lambda-guaranteed.sh` only when applicable. Never via IAC.
-- **User-facing text:** English only.
-- **Commit format:** `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>` — ask for ticket before first commit.
-- **No unit tests or E2E tests** — do not plan test tasks unless project rules require it.
+- Follow canonical policy in `rules/operational-guardrails.mdc`.
+- Follow commit policy in `rules/commits.mdc`.
+- Use optional project overrides in `docs/workflow/operational-overrides.md` when present.
+
+## Next Recommended Commands
+
+- `/pwf-plan <brainstorm-path>` to convert decisions into executable phases
+- `/pwf-clarify <future-plan-path>` if open questions remain high-impact
+- `/pwf-checklist <future-plan-path>` to quality-gate requirements before implementation

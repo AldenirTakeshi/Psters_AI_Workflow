@@ -1,50 +1,17 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-
-const STATE_PATH = resolve(".cursor/hooks/state/psters-ai-workflow.json");
-
-function parseJson(text) {
-  try {
-    return JSON.parse(text || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function loadState() {
-  if (!existsSync(STATE_PATH)) {
-    return { version: 1, sessions: {} };
-  }
-  try {
-    return JSON.parse(readFileSync(STATE_PATH, "utf8"));
-  } catch {
-    return { version: 1, sessions: {} };
-  }
-}
-
-function saveState(state) {
-  const dir = dirname(STATE_PATH);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-  writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
-}
-
-async function readStdin() {
-  return await new Promise((resolveInput) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => resolveInput(data));
-  });
-}
+import {
+  STATE_PATH,
+  loadJsonState,
+  logTelemetry,
+  readStdin,
+  safeParseJson,
+  sanitizeSessionId,
+  saveJsonState
+} from "./shared.mjs";
 
 async function main() {
-  const payload = parseJson(await readStdin());
-  const sessionId = payload.session_id || payload.conversation_id || "global";
-  const state = loadState();
+  const payload = safeParseJson(await readStdin());
+  const sessionId = sanitizeSessionId(payload.session_id || payload.conversation_id || "global");
+  const state = loadJsonState(STATE_PATH, { version: 1, sessions: {} });
   const session = state.sessions[sessionId] || state.sessions.global;
 
   if (!session) {
@@ -56,13 +23,17 @@ async function main() {
 
   delete state.sessions[sessionId];
   state.updatedAt = Date.now();
-  saveState(state);
+  saveJsonState(STATE_PATH, state);
+  logTelemetry("stop", {
+    sessionId,
+    needsDocsReminder
+  });
 
   if (needsDocsReminder) {
     process.stdout.write(
       JSON.stringify({
         followup_message:
-          "Documentation guard: code was edited but no docs were updated in this session. Run `/doc update` to refresh canonical docs. If you solved a non-trivial issue or pattern, run `/compound`."
+          "Documentation guard: code was edited but no docs were updated in this session. Run `/pwf-doc update` to refresh canonical docs. If baseline project docs are stale, run `/pwf-doc-foundation all`. If operational procedures changed, run `/pwf-doc-runbook <service-or-operation>`. If docs need lifecycle reconciliation, run `/pwf-doc-refresh`. If you solved a non-trivial issue or pattern, run `/pwf-doc-capture`."
       })
     );
     return;

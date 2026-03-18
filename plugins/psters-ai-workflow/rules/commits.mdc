@@ -6,8 +6,8 @@ alwaysApply: true
 # Commit Messages
 
 - **ALWAYS write commit messages in English**
-- **ALWAYS put a [TICKET-XXXX] prefix to the commit message** — ASK the user for the ticket number if not provided (e.g. at the start of /work or before the first commit).
-- **During /work:** Follow this rule for every commit; if the user has not given a ticket number, ask once before the first commit (e.g. "Do you have a ticket number [TICKET-XXXX] for this work?").
+- **ALWAYS put a [TICKET-XXXX] prefix to the commit message** — ASK the user for the ticket number if not provided (e.g. at the start of /pwf-work or before the first commit).
+- **During /pwf-work (and /pwf-work-plan):** Follow this rule for every commit; if the user has not given a ticket number, ask once before the first commit (e.g. "Do you have a ticket number [TICKET-XXXX] for this work?").
 - Use conventional commit format with emojis when appropriate
 - Format: `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`
 

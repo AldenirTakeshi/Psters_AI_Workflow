@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "defaultPreset": "general",
+  "presets": {
+    "general": {
+      "description": "Default workflow behavior for mixed stacks",
+      "qualityProfile": "balanced",
+      "planningEmphasis": ["scope-clarity", "dependency-ordering", "operational-docs"],
+      "reviewAgents": ["architecture-strategist", "code-simplicity-reviewer"]
+    },
+    "nestjs-api": {
+      "description": "NestJS API feature planning and execution",
+      "qualityProfile": "strict",
+      "planningEmphasis": ["dto-contracts", "typeorm-migration-safety", "module-boundaries"],
+      "reviewAgents": ["nestjs-reviewer", "data-integrity-guardian", "schema-drift-detector"]
+    },
+    "angular-feature": {
+      "description": "Angular feature UX and state orchestration",
+      "qualityProfile": "balanced",
+      "planningEmphasis": ["ux-flows", "error-loading-empty-states", "rxjs-lifecycle-safety"],
+      "reviewAgents": ["angular-reviewer", "julik-frontend-races-reviewer", "agent-native-reviewer"]
+    },
+    "lambda-pipeline": {
+      "description": "Lambda pipeline and async workflow changes",
+      "qualityProfile": "strict",
+      "planningEmphasis": ["event-contracts", "idempotency", "retry-and-failure-mode-safety"],
+      "reviewAgents": ["lambda-reviewer", "deployment-verification-agent", "security-sentinel"]
+    },
+    "bugfix-hotfix": {
+      "description": "Fast but disciplined production bugfix flow",
+      "qualityProfile": "fast",
+      "planningEmphasis": ["root-cause-first", "minimal-blast-radius", "verification-evidence"],
+      "reviewAgents": ["code-simplicity-reviewer", "security-sentinel", "deployment-verification-agent"]
+    }
+  }
+}

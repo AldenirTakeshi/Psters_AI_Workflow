@@ -12,6 +12,7 @@
 *.log
 tmp/
 temp/
+
+# Other
 Example/
-artigo.md
-artigo-en.md
+references/

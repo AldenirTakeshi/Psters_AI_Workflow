@@ -1,6 +1,6 @@
 ---
 name: lambda-doc-writer
-description: "Reads a Lambda repo completely and writes/updates its canonical documentation in docs/lambdas/<repo-name>.md. Use via /doc lambda <name>, /doc lambdas, or automatically from /work and /work-plan Phase 5 when a Lambda repo is modified. Returns the full markdown document text to the orchestrator — does NOT write to disk itself."
+description: "Reads a Lambda repo completely and writes/updates its canonical documentation in docs/lambdas/<repo-name>.md. Use via /pwf-doc lambda <name>, /pwf-doc lambdas, or automatically from /pwf-work and /pwf-work-plan Phase 5 when a Lambda repo is modified. Returns the full markdown document text to the orchestrator — does NOT write to disk itself."
 model: inherit
 ---
 

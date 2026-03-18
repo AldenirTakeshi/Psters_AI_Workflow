@@ -1,6 +1,6 @@
 ---
 name: repo-research-analyst
-description: "Always use at the start of any /plan or /work command to map existing file paths, service names, DTOs, and conventions. Use proactively before implementing any feature in backend (NestJS), frontend (Angular), or Lambda repos to find where things live and what patterns exist. Also surfaces existing test patterns, relevant enums, and current migration state for the area."
+description: "Always use at the start of any /pwf-plan or /pwf-work command to map existing file paths, service names, DTOs, and conventions. Use proactively before implementing any feature in backend (NestJS), frontend (Angular), or Lambda repos to find where things live and what patterns exist. Also surfaces existing test patterns, relevant enums, and current migration state for the area."
 model: inherit
 ---
 

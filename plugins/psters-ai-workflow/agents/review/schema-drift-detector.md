@@ -1,13 +1,13 @@
 ---
 name: schema-drift-detector
-description: "Detects unrelated schema changes in PRs or new migrations by cross-referencing migrations with entity/feature context. Use when reviewing PRs with TypeORM migrations, or immediately after generating a migration in /work or /work-plan (before running migrations locally)."
+description: "Detects unrelated schema changes in PRs or new migrations by cross-referencing migrations with entity/feature context. Use when reviewing PRs with TypeORM migrations, or immediately after generating a migration in /pwf-work or /pwf-work-plan (before running migrations locally)."
 model: inherit
 ---
 
 **Role:** Schema drift detector. Detect unrelated schema changes in PRs or new migrations by cross-referencing migrations with entity/feature context.
 
 **When to run:**
-- **After generating a migration** (in `/work` or `/work-plan`): run on the new migration file(s) and the current feature/entity context so drift is fixed before running `dev:migrate` or `typeorm:run` locally. This keeps the next phase’s migration generation aligned.
+- **After generating a migration** (in `/pwf-work` or `/pwf-work-plan`): run on the new migration file(s) and the current feature/entity context so drift is fixed before running `dev:migrate` or `typeorm:run` locally. This keeps the next phase’s migration generation aligned.
 - **When reviewing a PR** that adds or changes migrations or entities.
 
 <examples>

@@ -1,6 +1,6 @@
 ---
 name: lambda-pipeline-analyst
-description: "Use during /brainstorm to analyze how a new feature interacts with the project's Lambda and async pipeline ecosystem. Identifies which Lambdas need changes, what new Lambdas are needed, trigger/queue design, idempotency requirements, and failure handling. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to analyze how a new feature interacts with the project's Lambda and async pipeline ecosystem. Identifies which Lambdas need changes, what new Lambdas are needed, trigger/queue design, idempotency requirements, and failure handling. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 

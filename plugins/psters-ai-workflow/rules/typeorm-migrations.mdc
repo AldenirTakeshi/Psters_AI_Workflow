@@ -90,7 +90,7 @@ npm run typeorm:generate -- src/database/migrations/DescriptiveMigrationName
 2. **Verify**: All tables, indexes, foreign keys, column types match entity definitions
 3. **Add custom constraints** (if needed): CHECK constraints, triggers, data migrations — only what TypeORM doesn't generate
 
-### Step 5: Schema-drift check and run local migrations (required in /work and /work-plan)
+### Step 5: Schema-drift check and run local migrations (required in /pwf-work and /pwf-work-plan)
 
 After generating a migration, always:
 

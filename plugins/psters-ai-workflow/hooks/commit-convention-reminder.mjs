@@ -1,25 +1,8 @@
-async function readStdin() {
-  return await new Promise((resolveInput) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => resolveInput(data));
-  });
-}
-
-function parseJson(text) {
-  try {
-    return JSON.parse(text || "{}");
-  } catch {
-    return {};
-  }
-}
+import { logTelemetry, readStdin, safeParseJson, sanitizeCommand } from "./shared.mjs";
 
 async function main() {
-  const payload = parseJson(await readStdin());
-  const command = String(payload.command || "");
+  const payload = safeParseJson(await readStdin());
+  const command = sanitizeCommand(payload.command || "");
 
   if (!command) {
     process.stdout.write("{}");
@@ -29,9 +12,12 @@ async function main() {
   const hasTicketPrefix = /\[TICKET-[A-Za-z0-9_-]+\]/.test(command);
   if (!hasTicketPrefix) {
     console.error(
-      "[psters-ai-workflow hook] Commit reminder: prefer `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`; use `/commit-changes` for structured commits."
+      "[psters-ai-workflow hook] Commit reminder: prefer `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`; use `/pwf-commit-changes` for structured commits."
     );
   }
+  logTelemetry("beforeShellExecution.git-commit", {
+    hasTicketPrefix
+  });
 
   process.stdout.write("{}");
 }

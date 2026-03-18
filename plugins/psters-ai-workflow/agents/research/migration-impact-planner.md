@@ -1,6 +1,6 @@
 ---
 name: migration-impact-planner
-description: "Use during /plan (before writing implementation phases) when a feature involves TypeORM entity changes. Thinks through migration strategy BEFORE implementation: zero-downtime safety, backfill needs, index creation risk on large tables, and migration sequencing. Runs at planning time, not post-implementation — that's data-integrity-guardian's job."
+description: "Use during /pwf-plan (before writing implementation phases) when a feature involves TypeORM entity changes. Thinks through migration strategy BEFORE implementation: zero-downtime safety, backfill needs, index creation risk on large tables, and migration sequencing. Runs at planning time, not post-implementation — that's data-integrity-guardian's job."
 model: inherit
 ---
 

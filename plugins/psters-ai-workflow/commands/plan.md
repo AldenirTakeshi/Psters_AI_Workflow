@@ -1,22 +1,31 @@
 ---
-name: plan
+name: pwf-plan
 description: >
   Create a detailed, execution-ready implementation plan. Thorough research + review agents
-  ensure each phase can be executed directly by /work-plan without additional planning. Saves to docs/plans/.
+  ensure each phase can be executed directly by /pwf-work-plan without additional planning. Saves to docs/plans/.
 argument-hint: "[feature description, bug report, or path to brainstorm doc]"
+disable-model-invocation: true
 ---
 
 # Step 2 — Build an Execution Plan
 
 **Note: The current year is 2026.**
 
-Use this command to convert the feature context (or brainstorm) into a phased, execution-ready plan in `docs/plans/` that `/work-plan` can run directly.
+Use this command to convert the feature context (or brainstorm) into a phased, execution-ready plan in `docs/plans/` that `/pwf-work-plan` can run directly.
+
+When ambiguity materially impacts architecture/scope, run `/pwf-clarify` before finalizing the plan.
+Apply `skills/using-psters-workflow/SKILL.md` at start.
 
 ---
 
 ## ⚠️ Subagent Invocation (REQUIRED)
 
 All agents must be invoked via the Task tool (`subagent_type: generalPurpose`). Do not simulate or inline the agent's work. For each agent, instruct it to **read its agent file** and execute with the given input.
+
+Use collision-safe agent naming in prompts:
+- `psters-ai-workflow:research:<agent-name>`
+- `psters-ai-workflow:review:<agent-name>`
+- `psters-ai-workflow:workflow:<agent-name>`
 
 | Agent | File path |
 |-------|-----------|
@@ -29,6 +38,7 @@ All agents must be invoked via the Task tool (`subagent_type: generalPurpose`). 
 | performance-oracle | `agents/review/performance-oracle.md` |
 | best-practices-researcher | `agents/research/best-practices-researcher.md` |
 | framework-docs-researcher | `agents/research/framework-docs-researcher.md` |
+| plan-document-reviewer | `agents/workflow/plan-document-reviewer.md` |
 
 ---
 
@@ -39,6 +49,12 @@ All agents must be invoked via the Task tool (`subagent_type: generalPurpose`). 
 If empty, ask: "What would you like to plan? Describe the feature, bug fix, or improvement."
 
 **Brainstorm check:** Search `docs/brainstorms/` for a matching brainstorm. If found, read it fully — it contains architecture decisions, integration impact, and resolved questions that drive this plan. Also read any related existing plans in `docs/plans/`.
+
+**Preset support (optional):** If input contains `preset:<name>` (e.g. `preset:nestjs-api`), load `presets/presets.json` and adapt planning emphasis/review focus to that preset. If missing/invalid, fall back to `general`.
+Use preset `qualityProfile` guidance:
+- `strict`: maximize coverage and risk controls.
+- `balanced`: normal rigor.
+- `fast`: smallest safe plan for hotfix scope.
 
 ---
 
@@ -55,6 +71,7 @@ If empty, ask: "What would you like to plan? Describe the feature, bug fix, or i
 - **migration-impact-planner** — spawn if entity changes detected (new columns, entities, indexes, FK constraints, enum changes)
 - **best-practices-researcher** — spawn if the feature involves security, payments, or new third-party integrations
 - **framework-docs-researcher** — spawn if the feature requires unfamiliar framework patterns
+- **git-history-analyzer** — spawn for legacy/refactor work where historical intent matters
 
 ### Round 3 — Review (spawn applicable in parallel via Task tool, `subagent_type: generalPurpose`):
 
@@ -124,6 +141,15 @@ phased: true | false
 5. **Acceptance Criteria** — From spec-flow-analyzer: Given/When/Then covering happy path, all roles, and error states
 6. **Implementation Plan** — Phases or flat tasks (see format below)
 7. **Master Checklist** — Every task as a checkbox
+8. **Clarifications** — Link to clarifications artifact (`docs/plans/<plan-slug>.clarifications.md`) when relevant
+
+### Ambiguity handling
+
+When any critical requirement is unclear, add:
+
+`[NEEDS CLARIFICATION: specific question]`
+
+Do not guess on scope/auth/security boundaries when ambiguity changes implementation.
 
 ### Phase format (phased plans):
 
@@ -145,15 +171,14 @@ The `## Implementation Plan` section **must** open with a summary table, then ea
 **Objective**: [One sentence — what this phase achieves]
 **Dependencies**: [Phase N-1 or None]
 
-**Tasks**:
+**Tasks** (strict format):
 
-1. **[Task name]** (`path/to/file.ts`):
-   - Add `methodName(param: Type): ReturnType` to `ClassName`
-   - Add column `column_name` (varchar, nullable, default null) to `EntityName`
-   - Import `X` from `path` in module `Y`
-
-2. **[Task name]** (`path/to/file.ts`):
-   - ...
+- [ ] T001 [US1] Create DTO in `backend/src/modules/projects/dto/create-project.dto.ts`
+  - Add `name: string`, `status: ProjectStatus`, `ownerId: string`
+- [ ] T002 [P] [US1] Add mapper in `backend/src/modules/projects/projects.mapper.ts`
+  - Add `toResponseDto(entity: ProjectEntity): ProjectResponseDto`
+- [ ] T003 [US1] Extend service in `backend/src/modules/projects/projects.service.ts`
+  - Add `createProject(dto: CreateProjectDto, userId: string): Promise<ProjectEntity>`
 
 **After completing this phase**:
 1. Build — `npm run build` in affected repos; fix all errors.
@@ -165,11 +190,10 @@ The `## Implementation Plan` section **must** open with a summary table, then ea
 ```
 ## Implementation
 
-1. **[Task name]** (`path/to/file.ts`):
-   - Specific change: method name, field name, decorator, class
-
-2. **[Task name]** (`path/to/file.ts`):
-   - ...
+- [ ] T001 Create/update `path/to/file.ts`
+  - Specific change: method name, field name, decorator, class
+- [ ] T002 [P] Create/update `path/to/other-file.ts`
+  - Specific change details
 
 **After implementation**: `npm run build`, fix all errors.
 ```
@@ -180,8 +204,8 @@ The `## Implementation Plan` section **must** open with a summary table, then ea
 ## ✅ Master Checklist
 
 ### Phase 1: [Name]
-- [ ] [Task 1 short label]
-- [ ] [Task 2 short label]
+- [ ] T001 [US1] Task short label
+- [ ] T002 [P] [US1] Task short label
 - [ ] Build passes
 
 ### Phase 2: [Name]
@@ -193,7 +217,8 @@ The `## Implementation Plan` section **must** open with a summary table, then ea
 ## 5. Task Quality Rules
 
 Every task MUST have:
-- **Bold name** with the primary **file path** in parentheses
+- Checklist line format: `- [ ] T### [P?] [USx?] Description with \`path/to/file\``
+- Exact file path in every task line
 - **Concrete sub-bullets** with: method signatures, field names with types, DTO property names, import paths
 - Enough detail that an AI can execute it without guessing
 
@@ -201,6 +226,7 @@ Every task MUST NOT have:
 - Vague descriptions like "implement the feature" or "add the logic"
 - Test-related steps (unless project rules require tests)
 - Multiple unrelated concerns in one task
+- Missing IDs, missing file paths, or missing `[USx]` labels for story-phase tasks
 
 **Migration tasks are special:** When a phase includes entity changes that require a migration, the migration task MUST explicitly state: "Generate migration → drift-check → run locally IMMEDIATELY (atomic chain — see typeorm-migrations rule)." This prevents the AI from deferring the local run, which causes schema drift in subsequent migrations.
 
@@ -208,10 +234,30 @@ Every task MUST NOT have:
 
 ---
 
-## 6. Post-Generation
+## 6. Plan Review Loop (MANDATORY)
+
+After writing the plan, run a formal review loop using `plan-document-reviewer`:
+
+1. Spawn `plan-document-reviewer` with the generated plan path and relevant context summary.
+2. Apply only execution-impacting fixes (`CRITICAL`/`HIGH`) immediately.
+3. Re-run reviewer.
+4. Stop when approved or after a maximum of 3 iterations.
+
+If still not approved after 3 iterations, present open blockers explicitly and ask user for direction before execution.
+
+If extension hooks are configured, resolve and apply advisory guidance for `after_plan`:
+
+- `node ${CURSOR_PLUGIN_ROOT}/scripts/resolve-workflow-extensions.mjs after_plan`
+
+---
+
+## 7. Post-Generation
 
 Present: plan summary, phase count, task count. Offer:
-- Start `/work-plan [path]` to execute the first phase
+- Run `/pwf-clarify [plan-path]` if ambiguities remain
+- Run `/pwf-checklist [plan-path]` for requirement quality gates
+- Run `/pwf-analyze [plan-path]` for cross-artifact consistency
+- Start `/pwf-work-plan [path]` to execute the first phase
 - Review a specific section
 - Continue refining
 
@@ -219,10 +265,13 @@ Present: plan summary, phase count, task count. Offer:
 
 ## Conventions
 
-- **TypeORM migrations:** CLI only (`npm run typeorm:generate`). Never create migration files manually.
-- **AWS:** CLI + SSO only (`aws sso login --profile <aws-profile>`). Never `cdk deploy` unless project-specific.
-- **Lambda deploy:** Guaranteed scripts only.
-- **Error capture:** Consistent error capture for all frontend errors.
-- **User-facing text:** English only.
-- **Commits:** `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`.
-- **Context7:** Use the Context7 MCP for library documentation when relevant.
+- Follow canonical policy in `rules/operational-guardrails.mdc`.
+- Follow commit policy in `rules/commits.mdc`.
+- Use optional project overrides in `docs/workflow/operational-overrides.md` when present.
+
+## Next Recommended Commands
+
+- `/pwf-clarify <new-plan-path>` when open ambiguities exist
+- `/pwf-checklist <new-plan-path>` before execution
+- `/pwf-analyze <new-plan-path>` before execution
+- `/pwf-work-plan <new-plan-path> Phase 1` to start implementation

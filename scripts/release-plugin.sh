@@ -11,6 +11,7 @@ VERSION="$1"
 TAG="v${VERSION}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MARKETPLACE_JSON="${ROOT_DIR}/.cursor-plugin/marketplace.json"
+PLUGIN_JSON="${ROOT_DIR}/plugins/psters-ai-workflow/.cursor-plugin/plugin.json"
 CHANGELOG_MD="${ROOT_DIR}/CHANGELOG.md"
 
 require_cmd() {
@@ -44,6 +45,25 @@ MARKETPLACE_VERSION="$(node -e "const fs=require('fs');const data=JSON.parse(fs.
 if [[ "${MARKETPLACE_VERSION}" != "${VERSION}" ]]; then
   echo "Marketplace version mismatch: expected ${VERSION}, found ${MARKETPLACE_VERSION}" >&2
   echo "Update .cursor-plugin/marketplace.json before release." >&2
+  exit 1
+fi
+
+if [[ ! -f "${PLUGIN_JSON}" ]]; then
+  echo "Plugin manifest not found: ${PLUGIN_JSON}" >&2
+  exit 1
+fi
+
+echo "Checking plugin version..."
+PLUGIN_VERSION="$(node -e "const fs=require('fs');const data=JSON.parse(fs.readFileSync('${PLUGIN_JSON}','utf8'));process.stdout.write(data.version)")"
+if [[ "${PLUGIN_VERSION}" != "${VERSION}" ]]; then
+  echo "Plugin version mismatch: expected ${VERSION}, found ${PLUGIN_VERSION}" >&2
+  echo "Update plugins/psters-ai-workflow/.cursor-plugin/plugin.json before release." >&2
+  exit 1
+fi
+
+if [[ "${MARKETPLACE_VERSION}" != "${PLUGIN_VERSION}" ]]; then
+  echo "Version drift detected: marketplace=${MARKETPLACE_VERSION}, plugin=${PLUGIN_VERSION}" >&2
+  echo "Keep .cursor-plugin/marketplace.json and plugins/psters-ai-workflow/.cursor-plugin/plugin.json synchronized." >&2
   exit 1
 fi
 

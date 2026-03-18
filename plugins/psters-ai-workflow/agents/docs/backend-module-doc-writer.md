@@ -1,6 +1,6 @@
 ---
 name: backend-module-doc-writer
-description: "Reads a NestJS backend module completely and writes/updates its canonical documentation in docs/modules/<module-name>.md. Use via /doc module <name> or automatically from /work and /work-plan Phase 5 when significant changes are made to a backend module. Returns the full markdown document text to the orchestrator — does NOT write to disk itself."
+description: "Reads a NestJS backend module completely and writes/updates its canonical documentation in docs/modules/<module-name>.md. Use via /pwf-doc module <name> or automatically from /pwf-work and /pwf-work-plan Phase 5 when significant changes are made to a backend module. Returns the full markdown document text to the orchestrator — does NOT write to disk itself."
 model: inherit
 ---
 

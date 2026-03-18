@@ -1,15 +1,20 @@
 ---
-name: doc
+name: pwf-doc
 description: >
-  Documentation command. Modes: (1) /doc lambda <repo> — Lambda doc, (2) /doc lambdas — all Lambdas, (3) /doc module <module> — NestJS backend module doc, (4) /doc feature <feature> — Angular feature doc, (5) /doc architecture — system architecture overview, (6) /doc update — scan all docs for staleness and contradictions, (7) /doc adr "<decision>" — create an Architecture Decision Record.
-argument-hint: "lambda <repo> | lambdas | module <module> | feature <feature> | architecture | update | adr <decision>"
+  Documentation command. Modes: (1) /pwf-doc lambda <repo> — Lambda doc, (2) /pwf-doc lambdas — all Lambdas, (3) /pwf-doc module <module> — backend module doc, (4) /pwf-doc feature <feature> — frontend feature doc, (5) /pwf-doc architecture — system architecture overview, (6) /pwf-doc update — scan all docs for staleness and contradictions, (7) /pwf-doc adr "<decision>" — create an Architecture Decision Record, (8) /pwf-doc custom "<target and pattern>" — generate any project documentation from a user-described scope and format, (9) /pwf-doc infrastructure — project infrastructure source of truth.
+argument-hint: "lambda <repo> | lambdas | module <module> | feature <feature> | architecture | update | adr <decision> | custom <target-and-pattern> | infrastructure"
+disable-model-invocation: true
 ---
 
 # Force Technical Documentation by Scope
 
 **Note: The current year is 2026.**
 
-Use this command when you want explicit technical documentation output for a specific scope (module, feature, architecture, ADR, or global update). `/work` and `/work-plan` already update docs automatically.
+Use this command when you want explicit technical documentation output for a specific scope (module, feature, architecture, ADR, or global update). This is the general command to generate or update any documentation by described scope.
+
+**Work commands already update docs.** `/pwf-work`, `/pwf-work-plan`, `/pwf-work-light`, and `/pwf-work-tdd` update docs as part of their workflow. Use `/pwf-doc` for explicit, scope-targeted documentation beyond that flow.
+
+**Anti-drift guidance:** Before creating new docs, check if a related doc already exists. Prefer updating or syncing the existing doc instead of creating duplicates. This avoids drift and keeps documentation authoritative.
 
 The living documentation lives in:
 - `docs/lambdas/` — Lambda and processor repos
@@ -20,23 +25,30 @@ The living documentation lives in:
 
 ## Input
 
-<doc_target> #$ARGUMENTS </doc_target>
+<doc_target> #$ARGUMENTS </pwf-doc_target>
 
 If empty, show:
 ```
 Usage:
-  /doc lambda <repo-name>      Document a Lambda repo     (e.g. /doc lambda email-classifier-lambda)
-  /doc lambdas                 Document ALL Lambda repos in parallel
-  /doc module <module-name>    Document a backend module   (e.g. /doc module projects)
-  /doc feature <feature-name>  Document a frontend feature (e.g. /doc feature dashboard)
-  /doc architecture            Generate/update docs/architecture.md
-  /doc update                  Scan all docs for staleness and contradictions
-  /doc adr "<decision>"        Create an Architecture Decision Record
+  /pwf-doc lambda <repo-name>      Document a Lambda repo     (e.g. /pwf-doc lambda email-classifier-lambda)
+  /pwf-doc lambdas                 Document ALL Lambda repos in parallel
+  /pwf-doc module <module-name>    Document a backend module   (e.g. /pwf-doc module projects)
+  /pwf-doc feature <feature-name>  Document a frontend feature (e.g. /pwf-doc feature dashboard)
+  /pwf-doc architecture            Generate/update docs/architecture.md
+  /pwf-doc update                  Scan all docs for staleness and contradictions
+  /pwf-doc adr "<decision>"        Create an Architecture Decision Record
+  /pwf-doc custom "<target-and-pattern>"  Generate/update any doc from user-described scope
+  /pwf-doc infrastructure          Generate/update docs/infrastructure.md
 ```
 
 ---
 
-## Mode 1: `/doc lambda <repo-name>`
+## Agent invocation
+
+When spawning docs agents via Task tool, use collision-safe naming:
+`psters-ai-workflow:docs:<agent-name>`.
+
+## Mode 1: `/pwf-doc lambda <repo-name>`
 
 ### Step 1: Verify repo exists
 Check that the Lambda repo exists in the workspace. If not, list available Lambda repos and ask user to pick.
@@ -51,7 +63,7 @@ Spawn a Task tool agent (`subagent_type: generalPurpose`) with the full `lambda-
 
 ---
 
-## Mode 2: `/doc lambdas`
+## Mode 2: `/pwf-doc lambdas`
 
 ### Step 1: Discover all Lambda repos
 Discover Lambda repos in the workspace (e.g. `*-lambda`, `*-processor` or project-specific patterns).
@@ -67,7 +79,7 @@ Update the index table with all documented Lambdas, their pipeline position, and
 
 ---
 
-## Mode 3: `/doc module <module-name>`
+## Mode 3: `/pwf-doc module <module-name>`
 
 ### Step 1: Verify module exists
 Check that `backend/src/<module-name>/` (or equivalent) exists. If not, list available modules and ask user to pick.
@@ -87,7 +99,7 @@ Wait for the agent to return text.
 
 ---
 
-## Mode 4: `/doc feature <feature-name>`
+## Mode 4: `/pwf-doc feature <feature-name>`
 
 ### Step 1: Verify feature exists
 Check that `frontend/src/app/features/<feature-name>/` (or equivalent) exists. If not, list available features and ask user to pick.
@@ -107,29 +119,25 @@ Wait for the agent to return text.
 
 ---
 
-## Mode 5: `/doc architecture`
+## Mode 5: `/pwf-doc architecture`
 
 ### Step 1: Gather context (parallel reads)
-Read simultaneously:
-- All files in `docs/lambdas/` (if they exist)
-- All files in `docs/modules/` (if they exist)
-- All files in `docs/features/` (if they exist)
-- `docs/solutions/patterns/critical-patterns.md`
-- Project structure rules
-- The 5 most recent `docs/plans/*.md` files
-- The 3 most recent `docs/brainstorms/*.md` files
-- `docs/decisions/` — all ADRs
+Read/update context from:
+- `docs/lambdas/` (if exists)
+- `docs/modules/` (if exists)
+- `docs/features/` (if exists)
+- `docs/solutions/patterns/critical-patterns.md` (if exists)
+- recent `docs/plans/`, `docs/brainstorms/`, and ADRs in `docs/decisions/`
 
-### Step 2: Invoke architecture doc agent
-Spawn a Task tool agent with all gathered context:
-> "You are an architecture documentation writer. Based on the provided context (Lambda docs, module docs, feature docs, critical patterns, project structure rules, recent plans, brainstorms, and ADRs), generate/update docs/architecture.md — a living system architecture document covering: system overview, repo map, runtime stack, auth flow, Lambda pipeline catalog, data flow diagrams (ASCII), key design decisions, cross-repo integration points, and technology choices. Keep it concise and navigable. Include a table of contents."
+### Step 2: Invoke dedicated docs agent
+Spawn `architecture-doc-writer` (`agents/docs/architecture-doc-writer.md`) via Task tool (`subagent_type: generalPurpose`) and pass gathered context plus existing `docs/architecture.md` (if present).
 
 ### Step 3: Write the doc
-Write to `docs/architecture.md`. Confirm.
+Write returned content to `docs/architecture.md`. Confirm.
 
 ---
 
-## Mode 6: `/doc update`
+## Mode 6: `/pwf-doc update`
 
 Scan ALL living docs for staleness and contradictions without requiring a specific diff.
 
@@ -155,12 +163,12 @@ Spawn a Task tool agent (`subagent_type: generalPurpose`) with the full `doc-she
 
 The agent should focus on contradiction detection across all docs.
 
-### Step 4: Apply updates and report
-Apply any updates the shepherd returns. Report to user: what was updated, what contradictions were found (and ask for resolution if any).
+### Step 4: Review report and inform user
+Review the shepherd report (the agent writes updates directly to disk). Report to user: what was updated, what contradictions were found (and ask for resolution if any).
 
 ---
 
-## Mode 7: `/doc adr "<decision>"`
+## Mode 7: `/pwf-doc adr "<decision>"`
 
 Create an Architecture Decision Record documenting a significant architectural choice.
 
@@ -168,65 +176,19 @@ Create an Architecture Decision Record documenting a significant architectural c
 The argument is a short description of the decision (e.g., `"use Mailgun over SES for transactional email"`).
 
 ### Step 2: Gather context
-Ask the user (or infer from context) the following to fill the ADR:
-- **Context**: Why was this decision needed? What problem or constraint prompted it?
-- **Decision**: What exactly was decided?
-- **Consequences**: What does this decision imply for the system?
-- **Alternatives considered**: What other options were evaluated and why were they rejected?
+Collect decision context from user input and relevant artifacts:
+- latest related brainstorm/plan docs,
+- relevant architecture/infrastructure docs,
+- any constraints from critical patterns.
 
-If invoked after a brainstorm or plan, the context may already be available — read the most recent `docs/brainstorms/*.md` or `docs/plans/*.md` to extract this information.
+### Step 3: Invoke dedicated ADR agent
+Spawn `adr-writer` (`agents/docs/adr-writer.md`) via Task tool (`subagent_type: generalPurpose`) and provide:
+- decision summary,
+- gathered context,
+- full canonical template content from `assets/adr-template.md`.
 
-### Step 3: Write the ADR
-Generate a filename: `docs/decisions/YYYY-MM-DD-<slugified-decision>.md`
-
-Use the canonical ADR template:
-
-```markdown
----
-type: decision
-title: "<Decision Title>"
-status: accepted
-date: YYYY-MM-DD
-supersedes: null
-superseded_by: null
----
-
-# ADR: <Decision Title>
-
-## Context
-
-[Why was this decision needed? What problem, constraint, or requirement prompted it? What was the situation before this decision?]
-
-## Decision
-
-[What was decided? Be specific. If there were sub-decisions (e.g. which library, which service, which architecture pattern), list each.]
-
-## Consequences
-
-[What are the effects of this decision?]
-
-**Positive:**
-- [Benefit 1]
-- [Benefit 2]
-
-**Negative / Trade-offs:**
-- [Trade-off 1]
-- [Trade-off 2]
-
-**Neutral:**
-- [Side effect that's neither good nor bad]
-
-## Alternatives Considered
-
-| Option | Why Rejected |
-|--------|-------------|
-| [Alternative 1] | [Reason] |
-| [Alternative 2] | [Reason] |
-
-## Related
-
-- [Link to relevant plan, brainstorm, or docs/solutions/ doc if applicable]
-```
+Generate filename: `docs/decisions/YYYY-MM-DD-<slugified-decision>.md`
+Write returned ADR content to that file.
 
 ### Step 4: Update `docs/decisions/README.md`
 Add an entry for the new ADR in the catalog table.
@@ -235,6 +197,71 @@ Confirm: "ADR created: `docs/decisions/<filename>.md`"
 
 ---
 
-## Triggering from `/work` and `/work-plan`
+## Mode 8: `/pwf-doc custom "<target-and-pattern>"`
 
-When invoked automatically from Phase 5 of `/work` or `/work-plan`, the mode and target are passed as arguments. The flow is the same as above.
+Use this when the user wants to generate/update any documentation type that does not fit a strict preset mode.
+
+Examples:
+- `/pwf-doc custom "document the existing billing flow in docs/modules/billing.md with source-of-truth files and invariants"`
+- `/pwf-doc custom "create docs/features/dashboard.md using the same structure as docs/features/projects.md"`
+
+### Step 1: Parse target and expected format
+Extract:
+- target doc path (or infer one under `docs/`)
+- intent (create vs update)
+- required structure/pattern from the user description
+
+If target path is missing, propose one and ask user confirmation before writing.
+
+### Step 2: Anti-drift preflight (MANDATORY)
+Before creating new files:
+- search for existing docs covering the same scope
+- if one exists, update that file instead of creating a duplicate
+- if multiple similar docs exist, ask user to choose the canonical target first, then optionally run `/pwf-doc update` for a global consistency pass
+
+### Step 3: Gather source-of-truth context
+Read the relevant code and related docs needed to produce accurate content:
+- exact file paths and symbols
+- current behavior vs planned behavior
+- invariants, gotchas, and safe change checklist
+
+### Step 4: Write or update the target doc
+Produce operational documentation that is specific, concrete, and reusable.
+Avoid generic summaries.
+
+### Step 5: Cross-doc sync check
+Run a consistency pass against related docs and call out any conflicts.
+If conflicts are found, propose updates (or run `/pwf-doc-refresh` for interactive lifecycle decisions).
+
+Confirm: "Custom documentation updated: `<target-path>`"
+
+---
+
+## Mode 9: `/pwf-doc infrastructure`
+
+Generate or refresh `docs/infrastructure.md` as the project's infrastructure source of truth.
+
+### Step 1: Gather context
+Read/update context from:
+- `docs/architecture.md`, `docs/integrations.md`, `docs/environments.md`,
+- deployment scripts and infra-related references in the repository.
+
+### Step 2: Invoke dedicated infra docs agent
+Spawn `infrastructure-doc-writer` (`agents/docs/infrastructure-doc-writer.md`) via Task tool (`subagent_type: generalPurpose`) and pass gathered context plus existing `docs/infrastructure.md` (if present).
+
+### Step 3: Write the doc
+Write returned content to `docs/infrastructure.md`. Confirm.
+
+---
+
+## Triggering from `/pwf-work` and `/pwf-work-plan`
+
+When invoked automatically from Phase 5 of `/pwf-work` or `/pwf-work-plan`, the mode and target are passed as arguments. The flow is the same as above.
+
+## Next Recommended Commands
+
+- `/pwf-doc-foundation all` to bootstrap or refresh the core project docs set
+- `/pwf-doc-runbook <service-or-operation>` to add incident-ready operational procedures
+- `/pwf-analyze <related-plan-path>` after major doc updates affecting execution decisions
+- `/pwf-work-plan <plan-path> Phase N` to continue implementation with updated docs
+- `/pwf-review` if documentation changes reflected major code-level decisions

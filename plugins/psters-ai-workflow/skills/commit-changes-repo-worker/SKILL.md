@@ -1,6 +1,6 @@
 ---
 name: commit-changes-repo-worker
-description: Per-repo commit worker. Analyzes ALL changed files independently, groups them by ticket, and makes MULTIPLE focused commits — one per logical group. Spawned in parallel by /commit-changes (one instance per repo). Never create branches or push.
+description: Per-repo commit worker. Analyzes ALL changed files independently, groups them by ticket, and makes MULTIPLE focused commits — one per logical group. Spawned in parallel by /pwf-commit-changes (one instance per repo). Never create branches or push.
 ---
 
 # Commit Changes Repo Worker
@@ -8,7 +8,7 @@ description: Per-repo commit worker. Analyzes ALL changed files independently, g
 A focused, self-contained worker that handles **one repository** end-to-end:
 inspect files → classify each file by ticket → group → make multiple targeted commits → report.
 
-Spawned as a `generalPurpose` subagent (model: fast) from the `/commit-changes` command.
+Spawned as a `generalPurpose` subagent (model: fast) from the `/pwf-commit-changes` command.
 All instances run **in parallel** (one per repo).
 
 ---

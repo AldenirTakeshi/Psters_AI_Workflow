@@ -1,0 +1,16 @@
+---
+description: Use fully-qualified psters agent namespace in prompts
+alwaysApply: true
+---
+
+# Agent Namespace Convention
+
+When referencing plugin agents in prompts, use a fully-qualified namespace:
+
+- `psters-ai-workflow:research:<agent-name>`
+- `psters-ai-workflow:review:<agent-name>`
+- `psters-ai-workflow:docs:<agent-name>`
+- `psters-ai-workflow:workflow:<agent-name>`
+- `psters-ai-workflow:design:<agent-name>`
+
+Avoid short names alone when multiple plugins can be loaded.

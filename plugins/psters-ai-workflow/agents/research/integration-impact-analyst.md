@@ -1,6 +1,6 @@
 ---
 name: integration-impact-analyst
-description: "Use during /brainstorm to map every entity, service, Lambda, notification type, permission check, and settings section that a new feature touches or could break. Returns a structured impact map with breaking changes, migration needs, and new integration opportunities. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to map every entity, service, Lambda, notification type, permission check, and settings section that a new feature touches or could break. Returns a structured impact map with breaking changes, migration needs, and new integration opportunities. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 

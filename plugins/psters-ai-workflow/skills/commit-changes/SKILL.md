@@ -11,7 +11,7 @@ Use this skill when the user:
 
 - Pastes one or more issues (with `# Title` and `Identifier: TICKET-XXX` lines) and wants to commit.
 - Says "commit with these tickets", "commit my changes for TICKET-727", "commit everything and tag by ticket", or similar.
-- Runs the **/commit-changes** slash command with pasted content.
+- Runs the **/pwf-commit-changes** slash command with pasted content.
 
 ## What to do
 

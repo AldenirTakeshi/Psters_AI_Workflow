@@ -1,6 +1,6 @@
 ---
 name: doc-shepherd
-description: "Maintains and updates all docs/ after code changes. Called automatically from /work and /work-plan Phase 5. Receives the diff and work summary, scans all docs/ for stale references (outdated file paths, renamed methods/classes), updates them inline, and detects contradictions between docs on the same topic. Writes updates directly to disk and returns a summary report."
+description: "Maintains and updates all docs/ after code changes. Called automatically from /pwf-work and /pwf-work-plan Phase 5. Receives the diff and work summary, scans all docs/ for stale references (outdated file paths, renamed methods/classes), updates them inline, and detects contradictions between docs on the same topic. Writes updates directly to disk and returns a summary report."
 model: inherit
 ---
 

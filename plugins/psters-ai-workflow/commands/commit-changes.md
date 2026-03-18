@@ -1,8 +1,9 @@
 ---
-name: commit-changes
+name: pwf-commit-changes
 description: >
   Commit uncommitted changes across all workspace repos, tagging commits with ticket numbers from pasted issue text. Spawns one parallel subagent per repo — each analyzes every changed file, groups them by ticket, and makes multiple focused commits independently.
 argument-hint: "[paste issue(s) with TICKET-XXX and metadata, or list TICKET-XXX]"
+disable-model-invocation: true
 ---
 
 # Step 5 — Create Structured Commits
@@ -111,7 +112,7 @@ Parse each subagent's JSON response. For each repo, print one row per commit:
 Then show a quick summary line:
 > "X repos committed, Y commits total. All commits are local only — push each repo when ready."
 
-If any commit **failed**, show the error and suggest: "Fix the issue and re-run `/commit-changes` for that repo."
+If any commit **failed**, show the error and suggest: "Fix the issue and re-run `/pwf-commit-changes` for that repo."
 
 ---
 
@@ -135,3 +136,8 @@ Each repo subagent (generalPurpose, model: fast) handles the full lifecycle for 
 
 All subagents run in parallel. The main agent only orchestrates phases 1–2 and 4.
 This produces organized, reviewable git history — one commit per ticket per repo.
+
+## Next Recommended Commands
+
+- `/pwf-review` if commits should be preceded by a final risk check
+- `/pwf-aws-lambda-deploy` if Lambda code was committed and is ready to deploy

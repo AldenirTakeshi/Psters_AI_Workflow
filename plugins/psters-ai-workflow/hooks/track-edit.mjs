@@ -1,37 +1,16 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-
-const STATE_PATH = resolve(".cursor/hooks/state/psters-ai-workflow.json");
-
-function readJson(stdinText) {
-  try {
-    return JSON.parse(stdinText || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function loadState() {
-  if (!existsSync(STATE_PATH)) {
-    return { version: 1, sessions: {} };
-  }
-  try {
-    return JSON.parse(readFileSync(STATE_PATH, "utf8"));
-  } catch {
-    return { version: 1, sessions: {} };
-  }
-}
-
-function saveState(state) {
-  const dir = dirname(STATE_PATH);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-  writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
-}
+import {
+  STATE_PATH,
+  loadJsonState,
+  logTelemetry,
+  readStdin,
+  safeParseJson,
+  sanitizeFilePath,
+  sanitizeSessionId,
+  saveJsonState
+} from "./shared.mjs";
 
 function pickFilePath(payload) {
-  return (
+  return sanitizeFilePath(
     payload.file_path ||
     payload.path ||
     payload.relative_path ||
@@ -55,20 +34,12 @@ function isDocPath(filePath) {
 }
 
 async function main() {
-  const stdin = await new Promise((resolveInput) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => resolveInput(data));
-  });
-
-  const payload = readJson(stdin);
-  const sessionId = payload.session_id || payload.conversation_id || "global";
+  const stdin = await readStdin();
+  const payload = safeParseJson(stdin);
+  const sessionId = sanitizeSessionId(payload.session_id || payload.conversation_id || "global");
   const filePath = pickFilePath(payload);
 
-  const state = loadState();
+  const state = loadJsonState(STATE_PATH, { version: 1, sessions: {} });
   if (!state.sessions[sessionId]) {
     state.sessions[sessionId] = { codeEdits: 0, docEdits: 0, touched: [] };
   }
@@ -85,7 +56,12 @@ async function main() {
   }
 
   state.updatedAt = Date.now();
-  saveState(state);
+  saveJsonState(STATE_PATH, state);
+  logTelemetry("afterFileEdit", {
+    sessionId,
+    isDoc: isDocPath(filePath),
+    filePath
+  });
 
   process.stdout.write("{}");
 }

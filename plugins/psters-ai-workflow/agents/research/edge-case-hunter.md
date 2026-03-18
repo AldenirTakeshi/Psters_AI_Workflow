@@ -1,6 +1,6 @@
 ---
 name: edge-case-hunter
-description: "Use during /brainstorm to systematically discover every edge case, failure mode, race condition, and security boundary that the new feature must handle. Returns a structured catalog of scenarios grouped by category with recommended handling for each. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to systematically discover every edge case, failure mode, race condition, and security boundary that the new feature must handle. Returns a structured catalog of scenarios grouped by category with recommended handling for each. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 

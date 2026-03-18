@@ -1,6 +1,6 @@
 ---
 name: data-model-designer
-description: "Use during /brainstorm to design the optimal data model for a new feature: which entities to add or extend, what indexes are needed, migration safety, relationship patterns, and performance strategy. Returns a concrete, migration-safe data model proposal grounded in what already exists. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to design the optimal data model for a new feature: which entities to add or extend, what indexes are needed, migration safety, relationship patterns, and performance strategy. Returns a concrete, migration-safe data model proposal grounded in what already exists. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 

@@ -1,31 +1,18 @@
-async function readStdin() {
-  return await new Promise((resolveInput) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => resolveInput(data));
-  });
-}
-
-function parseJson(text) {
-  try {
-    return JSON.parse(text || "{}");
-  } catch {
-    return {};
-  }
-}
+import { logTelemetry, readStdin, safeParseJson, sanitizeCommand } from "./shared.mjs";
 
 async function main() {
-  const payload = parseJson(await readStdin());
-  const command = String(payload.command || "");
+  const payload = safeParseJson(await readStdin());
+  const command = sanitizeCommand(payload.command || "");
 
-  if (command.includes("typeorm:generate")) {
+  const isGenerate = command.includes("typeorm:generate");
+  if (isGenerate) {
     console.error(
       "[psters-ai-workflow hook] TypeORM atomic chain reminder: generate -> drift-check -> run locally immediately."
     );
   }
+  logTelemetry("afterShellExecution.typeorm-generate", {
+    isGenerate
+  });
 
   process.stdout.write("{}");
 }

@@ -1,6 +1,6 @@
 ---
 name: api-contract-designer
-description: "Use during /brainstorm to design the REST API surface for a new feature before the plan is written. Returns explicit endpoint contracts (HTTP method, path, request DTO shape, response DTO shape, auth guard, pagination format, filtering params) grounded in the project's API Gateway → Cognito Authorizer → ECS NestJS backend architecture. Fills the gap between data model/UX design and the plan's backend tasks. Always invoked in parallel with other brainstorm research agents."
+description: "Use during /pwf-brainstorm to design the REST API surface for a new feature before the plan is written. Returns explicit endpoint contracts (HTTP method, path, request DTO shape, response DTO shape, auth guard, pagination format, filtering params) grounded in the project's API Gateway → Cognito Authorizer → ECS NestJS backend architecture. Fills the gap between data model/UX design and the plan's backend tasks. Always invoked in parallel with other brainstorm research agents."
 model: inherit
 ---
 
