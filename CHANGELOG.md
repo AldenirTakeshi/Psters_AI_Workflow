@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog.
 
+## [1.0.1] - 2026-03-18
+
+### Changed
+
+- Renamed all command files in `plugins/psters-ai-workflow/commands/` to the `pwf-*.md` pattern so prefixed `/pwf-*` commands resolve consistently from file naming.
+
 ## [1.0.0] - 2026-03-18
 
 ### Added
