@@ -6,10 +6,9 @@ alwaysApply: true
 # Commit Messages
 
 - **ALWAYS write commit messages in English**
-- **ALWAYS put a [TICKET-XXXX] prefix to the commit message** — ASK the user for the ticket number if not provided (e.g. at the start of /pwf-work or before the first commit).
-- **During /pwf-work (and /pwf-work-plan):** Follow this rule for every commit; if the user has not given a ticket number, ask once before the first commit (e.g. "Do you have a ticket number [TICKET-XXXX] for this work?").
 - Use conventional commit format with emojis when appropriate
-- Format: `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`
+- Preferred format with ticket: `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`
+- Allowed format without ticket: `<emoji> <type>(<scope>): <subject>`
 
 ## Commit Types
 
@@ -26,12 +25,13 @@ alwaysApply: true
 
 ## Examples
 
-- `[TICKET-1234] 🚀 feat(auth): add JWT authentication`
-- `[TICKET-1234] 🐛 fix(api): resolve CORS configuration issue`
-- `[TICKET-1234] 📝 docs: update README with deployment instructions`
-- `[TICKET-1234] ♻️ refactor(users): improve service structure`
-- `[TICKET-1234] ✅ test: add unit tests for auth service`
-- `[TICKET-1234] ⚡ perf(database): optimize query performance`
+- `🚀 feat(auth): add JWT authentication`
+- `🐛 fix(api): resolve CORS configuration issue`
+- `📝 docs: update README with deployment instructions`
+- `♻️ refactor(users): improve service structure`
+- `✅ test: add unit tests for auth service`
+- `⚡ perf(database): optimize query performance`
+- `[TICKET-1234] 🚀 feat(auth): add JWT authentication` (optional ticket prefix)
 
 ## Guidelines
 
